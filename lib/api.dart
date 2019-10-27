@@ -134,3 +134,16 @@ Future votigiornalieri() async {
   }
   return materieVoti;
 }
+
+Future note() async {
+  var response = await argoRequest(fullHeaders, 'notedisciplinari', {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n'+response['error']);
+    return {};
+  }
+  var listaNote = [];
+  for (var nota in response['dati']) {
+    listaNote.add({'nota': nota['desNota'], 'prof': nota['docente'], 'data': nota['datNota']});
+  }
+  return listaNote;
+}

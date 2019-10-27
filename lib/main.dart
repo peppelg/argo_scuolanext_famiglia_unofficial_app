@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'redirectRoute.dart';
 import 'login.dart';
 import 'voti.dart';
-import 'redirectRoute.dart';
+import 'assenze.dart';
+import 'compiti.dart';
+import 'lezioni.dart';
+import 'note.dart';
+import 'oggi.dart';
 
 /*void main() {
   runApp(MyApp());
@@ -53,7 +58,12 @@ class MyApp extends StatelessWidget {
       home: RedirectRoute(),
       routes: <String, WidgetBuilder>{
         '/voti': (BuildContext context) => new VotiRoute(),
-        '/login': (BuildContext context) => new LoginRoute()
+        '/login': (BuildContext context) => new LoginRoute(),
+        '/note': (BuildContext context) => new NoteRoute(),
+        '/assenze': (BuildContext context) => new AssenzeRoute(),
+        '/compiti': (BuildContext context) => new CompitiRoute(),
+        '/lezioni': (BuildContext context) => new LezioniRoute(),
+        '/oggi': (BuildContext context) => new OggiRoute(),
       },
     );
   }

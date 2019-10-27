@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:backdrop/backdrop.dart';
+import 'backdropWidgets.dart';
 import 'api.dart';
 
 class VotiRoute extends StatefulWidget {
@@ -27,7 +29,7 @@ class _VotiRouteState extends State<VotiRoute> {
           numeroVoti++;
         }
         listaVoti.add(Padding(
-            padding: EdgeInsets.only(left: 10),
+            padding: EdgeInsets.only(left: 5, top: 5),
             child: ListTile(
                 leading: CircleAvatar(
                     child: Text(voto[0].toString()),
@@ -83,9 +85,18 @@ class _VotiRouteState extends State<VotiRoute> {
           title: Text(materia['materia']),
           children: listaVoti));
     }
-    return Scaffold(
-        appBar: AppBar(title: Text('I miei voti')),
-        body: RefreshIndicator(
+    return BackdropScaffold(
+        title: Text('I miei voti'),
+        backLayer: getBackdrop(context),
+        /*
+        iconPosition: BackdropIconPosition.leading, //poi lo uso x fare bottone x change data
+          actions: <Widget>[
+            BackdropToggleButton(
+              icon: AnimatedIcons.list_view,
+            ),
+          ],
+          */
+        frontLayer: RefreshIndicator(
             key: _refreshIndicatorKey,
             onRefresh: aggiornaVoti,
             child: ListView(
