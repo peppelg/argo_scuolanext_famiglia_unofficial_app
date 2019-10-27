@@ -25,7 +25,7 @@ class _VotiRouteState extends State<VotiRoute> {
       for (var voto in materia['voti']) {
         voto[0] = voto[0].toString();
         if (!voto[3].contains('non fa media')) {
-          sommaVoti += double.parse(voto[0]);
+          sommaVoti += double.parse(voto[0].toString());
           numeroVoti++;
         }
         listaVoti.add(Padding(
@@ -33,7 +33,7 @@ class _VotiRouteState extends State<VotiRoute> {
             child: ListTile(
                 leading: CircleAvatar(
                     child: Text(voto[0].toString()),
-                    backgroundColor: coloreVoto(voto[0])),
+                    backgroundColor: coloreVoto(voto[0].toString())),
                 title: Text(voto[2]),
                 subtitle: Text(voto[1]),
                 trailing: IconButton(
@@ -49,7 +49,7 @@ class _VotiRouteState extends State<VotiRoute> {
                           content: SingleChildScrollView(
                             child: ListBody(
                               children: <Widget>[
-                                Text('Voto: ' + voto[0]),
+                                Text('Voto: ' + voto[0].toString()),
                                 Text('Data: ' + voto[1]),
                                 Text('Descrizione: ' +
                                     (['', null, false, 0].contains(voto[4])
