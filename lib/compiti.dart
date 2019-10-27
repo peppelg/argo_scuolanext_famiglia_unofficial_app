@@ -11,13 +11,17 @@ class CompitiRoute extends StatefulWidget {
 }
 
 class _CompitiRouteState extends State<CompitiRoute> {
-  List voti = [];
+  Map listaCompiti = {};
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
     var widgetsCompiti = <Widget>[];
+    listaCompiti.forEach((k, compiti) => widgetsCompiti.add(ExpansionTile(
+        leading: Icon(Icons.assignment),
+        title: Text(k),
+        children: buildCompitiWidget(compiti))));
     return BackdropScaffold(
         title: Text('Compiti assegnati'),
         backLayer: getBackdrop(context),
@@ -29,21 +33,27 @@ class _CompitiRouteState extends State<CompitiRoute> {
   }
 
   Future aggiornaCompiti() async {
-    /*
-    var nuoviVoti = await votigiornalieri();
-    var votiAggiornati = [];
-    nuoviVoti.forEach(
-        (k, v) => votiAggiornati.add({'materia': k, 'voti': v['voti']}));
+    var nuoviCompiti = await compiti();
     setState(() {
-      voti = votiAggiornati;
+      listaCompiti = nuoviCompiti;
     });
-    return votiAggiornati;
-    */
   }
 
   void initState() {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+  }
+
+  buildCompitiWidget(compiti) {
+    var widgetCompiti = <Widget>[];
+    for (var compito in compiti) {
+      widgetCompiti.add(Card(
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        ListTile(
+            title: Text(compito['data']), subtitle: Text(compito['compito']))
+      ])));
+    }
+    return widgetCompiti;
   }
 }

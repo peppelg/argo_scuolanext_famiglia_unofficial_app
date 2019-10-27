@@ -26,7 +26,7 @@ class _NoteRouteState extends State<NoteRoute> {
             ListTile(
               title: Text(nota['data'] + ' ' + nota['prof']),
               subtitle: Text(nota['nota']),
-              leading: Icon(Icons.warning)
+              leading: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[Icon(Icons.warning)])
             )
           ]))));
     }

@@ -1,9 +1,10 @@
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:io';
-import 'package:path_provider/path_provider.dart';
 
 var endpoint = 'https://www.portaleargo.it/famiglia/api/rest';
 var verifyHeaders = {
@@ -44,7 +45,8 @@ var fullHeaders = {
   'x-prg-alunno': ''
 };
 
-Future saveToken(auth_token, cod_min, prg_scheda, prg_alunno, prg_scuola) async {
+Future saveToken(
+    auth_token, cod_min, prg_scheda, prg_alunno, prg_scuola) async {
   Directory appDocDir = await getApplicationDocumentsDirectory();
   String appDocPath = appDocDir.path;
   Hive.init(appDocPath);
@@ -73,10 +75,15 @@ Future loadToken() async {
   }
 }
 
+formatDate(date) {
+  return DateFormat('dd/M/y').format(DateTime.parse(date)).toString();
+}
+
 Future argoRequest(headers, request, params) async {
   try {
     params['_dc'] = new DateTime.now().millisecondsSinceEpoch.toString();
-    Response response = await Dio().get(endpoint + '/' + request, queryParameters: params, options: Options(headers: headers));
+    Response response = await Dio().get(endpoint + '/' + request,
+        queryParameters: params, options: Options(headers: headers));
     return response.data;
   } catch (e) {
     return {'error': e.toString()};
@@ -103,7 +110,12 @@ Future login(school, username, password) async {
         fullHeaders['x-prg-scheda'] = info[0]['prgScheda'].toString();
         fullHeaders['x-prg-scuola'] = info[0]['prgScuola'].toString();
         fullHeaders['x-prg-alunno'] = info[0]['prgAlunno'].toString();
-        saveToken(fullHeaders['x-auth-token'], fullHeaders['x-cod-min'], fullHeaders['x-prg-scheda'], fullHeaders['x-prg-alunno'], fullHeaders['x-prg-scuola']);
+        saveToken(
+            fullHeaders['x-auth-token'],
+            fullHeaders['x-cod-min'],
+            fullHeaders['x-prg-scheda'],
+            fullHeaders['x-prg-alunno'],
+            fullHeaders['x-prg-scuola']);
         return 'OK';
       } else {
         return 'Errore sconosciuto.';
@@ -113,9 +125,10 @@ Future login(school, username, password) async {
 }
 
 Future votigiornalieri() async {
-  var response = await argoRequest(fullHeaders, 'votigiornalieri', {'page': '1', 'start': '0', 'limit': '25'});
+  var response = await argoRequest(fullHeaders, 'votigiornalieri',
+      {'page': '1', 'start': '0', 'limit': '25'});
   if (response.containsKey('error')) {
-    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n'+response['error']);
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return {};
   }
   var materieVoti = {};
@@ -130,20 +143,70 @@ Future votigiornalieri() async {
     if (!materieVoti.containsKey(voto['desMateria'])) {
       materieVoti[voto['desMateria']] = {'voti': []};
     }
-    materieVoti[voto['desMateria']]['voti'].add([voto['decValore'], voto['datGiorno'], voto['codVotoPratico'], voto['desCommento'], voto['desProva']]);
+    materieVoti[voto['desMateria']]['voti'].add([
+      voto['decValore'],
+      formatDate(voto['datGiorno']),
+      voto['codVotoPratico'],
+      voto['desCommento'],
+      voto['desProva']
+    ]);
   }
   return materieVoti;
 }
 
 Future note() async {
-  var response = await argoRequest(fullHeaders, 'notedisciplinari', {'page': '1', 'start': '0', 'limit': '25'});
+  var response = await argoRequest(fullHeaders, 'notedisciplinari',
+      {'page': '1', 'start': '0', 'limit': '25'});
   if (response.containsKey('error')) {
-    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n'+response['error']);
-    return {};
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return [];
   }
   var listaNote = [];
   for (var nota in response['dati']) {
-    listaNote.add({'nota': nota['desNota'], 'prof': nota['docente'], 'data': nota['datNota']});
+    listaNote.add({
+      'nota': nota['desNota'],
+      'prof': nota['docente'],
+      'data': formatDate(nota['datNota'])
+    });
   }
   return listaNote;
+}
+
+Future assenze() async {
+  var response = await argoRequest(
+      fullHeaders, 'assenze', {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return [];
+  }
+  var listaAssenze = [];
+  for (var assenza in response['dati']) {
+    listaAssenze.add({
+      'assenza': formatDate(assenza['datAssenza']) +
+          (assenza['flgDaGiustificare'] == true ? '' : ' (da giustificare)'),
+      'prof': assenza['registrataDa']
+    });
+  }
+  return listaAssenze;
+}
+
+Future compiti() async {
+  var response = await argoRequest(
+      fullHeaders, 'compiti', {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  var listaCompiti = {};
+  for (var compito in response['dati']) {
+    compito['desMateria'] = compito['desMateria'] + ' ' + compito['docente'];
+    if (!listaCompiti.containsKey(compito['desMateria'])) {
+      listaCompiti[compito['desMateria']] = [];
+    }
+    listaCompiti[compito['desMateria']].add({
+      'data': formatDate(compito['datGiorno']),
+      'compito': compito['desCompiti']
+    });
+  }
+  return listaCompiti;
 }
