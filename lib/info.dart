@@ -11,7 +11,7 @@ class InfoRoute extends StatelessWidget {
         title: Text('Informazioni'),
         backLayer: getBackdrop(context),
         frontLayer: Markdown(
-            data: "App open-source non ufficiale per Argo ScuolaNext.\n\n[Sito dell'app](https://peppelg.space/argo_famiglia)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n\nIcona creata da Prosymbols da www.flaticon.com",
+            data: "App open-source non ufficiale per Argo ScuolaNext.\n\n[Sito dell'app](https://peppelg.space/argo_famiglia)\n[Canale Telegram](https://t.me/scuolanext)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n\n\nIcona creata da Prosymbols per www.flaticon.com",
             onTapLink: (href) {
               launch(href);
             }));
