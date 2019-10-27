@@ -39,6 +39,12 @@ getBackdrop(context) {
         Navigator.of(context).pushReplacementNamed('/oggi');
       },
       child: Text('Cosa è successo oggi', style: TextStyle(color: Colors.white)),
+    ),
+    FlatButton(
+      onPressed: () {
+        Navigator.of(context).pushReplacementNamed('/info');
+      },
+      child: Text('Informazioni', style: TextStyle(color: Colors.white)),
     )
   ])));
 }

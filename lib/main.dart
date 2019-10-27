@@ -7,6 +7,7 @@ import 'compiti.dart';
 import 'lezioni.dart';
 import 'note.dart';
 import 'oggi.dart';
+import 'info.dart';
 
 /*void main() {
   runApp(MyApp());
@@ -64,6 +65,7 @@ class MyApp extends StatelessWidget {
         '/compiti': (BuildContext context) => new CompitiRoute(),
         '/lezioni': (BuildContext context) => new LezioniRoute(),
         '/oggi': (BuildContext context) => new OggiRoute(),
+        '/info': (BuildContext context) => new InfoRoute()
       },
     );
   }

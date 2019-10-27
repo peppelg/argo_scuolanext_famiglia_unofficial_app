@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
 
@@ -47,7 +48,7 @@ class _OggiRouteState extends State<OggiRoute> {
                   giorno = formatDate(date.toString());
                   WidgetsBinding.instance.addPostFrameCallback(
                       (_) => _refreshIndicatorKey.currentState.show());
-                }, currentTime: DateTime.now(), locale: LocaleType.it);
+                }, currentTime: DateFormat('dd/MM/y').parse(giorno), locale: LocaleType.it);
               })
         ],
         frontLayer: RefreshIndicator(

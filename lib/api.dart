@@ -76,7 +76,7 @@ Future loadToken() async {
 }
 
 formatDate(date) {
-  var dt = DateFormat('dd/M/y').format(DateTime.parse(date)).toString();
+  var dt = DateFormat('dd/MM/y').format(DateTime.parse(date)).toString();
   return dt;
 }
 
@@ -235,7 +235,7 @@ Future argomenti() async {
 }
 
 Future oggi(data) async {
-  data = DateFormat('yyyy-MM-dd').format(DateFormat('dd/M/y').parse(data)).toString();
+  data = DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/y').parse(data)).toString();
   var response = await argoRequest(fullHeaders, 'oggi', {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
@@ -258,6 +258,10 @@ Future oggi(data) async {
     if (tipo['tipo'] == 'NOT') {
       //nota
       listaOggi.add({'tipo': 'nota', 'titolo': tipo['dati']['docente'], 'descrizione': tipo['dati']['desNota']});
+    }
+    if (tipo['tipo'] == 'ASS') {
+      //assenza
+      listaOggi.add({'tipo': 'assenza', 'titolo': tipo['dati']['registrataDa'], 'descrizione': 'Assenza.'});
     }
   }
   return listaOggi;
