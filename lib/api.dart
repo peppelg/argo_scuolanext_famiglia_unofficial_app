@@ -76,7 +76,8 @@ Future loadToken() async {
 }
 
 formatDate(date) {
-  return DateFormat('dd/M/y').format(DateTime.parse(date)).toString();
+  var dt = DateFormat('dd/M/y').format(DateTime.parse(date)).toString();
+  return dt;
 }
 
 Future argoRequest(headers, request, params) async {
@@ -231,4 +232,33 @@ Future argomenti() async {
     });
   }
   return listaArgomenti;
+}
+
+Future oggi(data) async {
+  data = DateFormat('yyyy-MM-dd').format(DateFormat('dd/M/y').parse(data)).toString();
+  var response = await argoRequest(fullHeaders, 'oggi', {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return [];
+  }
+  var listaOggi = [];
+  for (var tipo in response['dati']) {
+    if (tipo['tipo'] == 'COM') {
+      //compito assegnato
+      listaOggi.add({'tipo': 'compito', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'descrizione': tipo['dati']['desCompiti']});
+    }
+    if (tipo['tipo'] == 'ARG') {
+      //argomento
+      listaOggi.add({'tipo': 'argomento', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'descrizione': tipo['dati']['desArgomento']});
+    }
+    if (tipo['tipo'] == 'VOT') {
+      //voto
+      listaOggi.add({'tipo': 'voto', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'voto': tipo['dati']['decValore'].toString(), 'descrizione': 'Voto: '+tipo['dati']['decValore'].toString()});
+    }
+    if (tipo['tipo'] == 'NOT') {
+      //nota
+      listaOggi.add({'tipo': 'nota', 'titolo': tipo['dati']['docente'], 'descrizione': tipo['dati']['desNota']});
+    }
+  }
+  return listaOggi;
 }

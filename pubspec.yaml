@@ -30,6 +30,7 @@ dependencies:
   path_provider: ^1.4.0
   backdrop: ^0.1.8
   intl: ^0.16.0
+  flutter_datetime_picker: ^1.2.8
 
 dev_dependencies:
   flutter_test:
