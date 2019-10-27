@@ -210,3 +210,25 @@ Future compiti() async {
   }
   return listaCompiti;
 }
+
+Future argomenti() async {
+  var response = await argoRequest(
+      fullHeaders, 'argomenti', {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  var listaArgomenti = {};
+  for (var argomento in response['dati']) {
+    argomento['desMateria'] =
+        argomento['desMateria'] + ' ' + argomento['docente'];
+    if (!listaArgomenti.containsKey(argomento['desMateria'])) {
+      listaArgomenti[argomento['desMateria']] = [];
+    }
+    listaArgomenti[argomento['desMateria']].add({
+      'data': formatDate(argomento['datGiorno']),
+      'argomento': argomento['desArgomento']
+    });
+  }
+  return listaArgomenti;
+}

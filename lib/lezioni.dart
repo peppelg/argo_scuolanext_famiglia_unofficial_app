@@ -11,13 +11,17 @@ class LezioniRoute extends StatefulWidget {
 }
 
 class _LezioniRouteState extends State<LezioniRoute> {
-  List voti = [];
+  Map listaArgomenti = {};
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
     var widgetsLezioni = <Widget>[];
+    listaArgomenti.forEach((k, argomenti) => widgetsLezioni.add(ExpansionTile(
+        leading: Icon(Icons.book),
+        title: Text(k),
+        children: buildArgomentiWidget(argomenti))));
     return BackdropScaffold(
         title: Text('Argomenti lezione'),
         backLayer: getBackdrop(context),
@@ -29,21 +33,28 @@ class _LezioniRouteState extends State<LezioniRoute> {
   }
 
   Future aggiornaLezioni() async {
-    /*
-    var nuoviVoti = await votigiornalieri();
-    var votiAggiornati = [];
-    nuoviVoti.forEach(
-        (k, v) => votiAggiornati.add({'materia': k, 'voti': v['voti']}));
+    var nuoviArgomenti = await argomenti();
     setState(() {
-      voti = votiAggiornati;
+      listaArgomenti = nuoviArgomenti;
     });
-    return votiAggiornati;
-    */
   }
 
   void initState() {
     super.initState();
     WidgetsBinding.instance
         .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+  }
+
+  buildArgomentiWidget(argomenti) {
+    var widgetArgomenti = <Widget>[];
+    for (var argomento in argomenti) {
+      widgetArgomenti.add(Card(
+          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
+        ListTile(
+            title: Text(argomento['data']),
+            subtitle: Text(argomento['argomento']))
+      ])));
+    }
+    return widgetArgomenti;
   }
 }
