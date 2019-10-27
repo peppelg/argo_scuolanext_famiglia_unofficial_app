@@ -80,6 +80,13 @@ formatDate(date) {
   return dt;
 }
 
+bool isNumeric(String str) {
+  if(str == null) {
+    return false;
+  }
+  return double.tryParse(str) != null;
+}
+
 Future argoRequest(headers, request, params) async {
   try {
     params['_dc'] = new DateTime.now().millisecondsSinceEpoch.toString();
@@ -134,23 +141,25 @@ Future votigiornalieri() async {
   }
   var materieVoti = {};
   for (var voto in response['dati']) {
-    voto['desMateria'] = voto['desMateria'] + ' ' + voto['docente'];
-    if (voto['codVotoPratico'] == 'S') {
-      voto['codVotoPratico'] = 'scritto';
+    if (voto.containsKey('decValore') && isNumeric(voto['decValore'].toString())) {
+      voto['desMateria'] = voto['desMateria'] + ' ' + voto['docente'];
+      if (voto['codVotoPratico'] == 'S') {
+        voto['codVotoPratico'] = 'scritto';
+      }
+      if (voto['codVotoPratico'] == 'N') {
+        voto['codVotoPratico'] = 'orale';
+      }
+      if (!materieVoti.containsKey(voto['desMateria'])) {
+        materieVoti[voto['desMateria']] = {'voti': []};
+      }
+      materieVoti[voto['desMateria']]['voti'].add([
+        voto['decValore'],
+        formatDate(voto['datGiorno']),
+        voto['codVotoPratico'],
+        voto['desCommento'],
+        voto['desProva']
+      ]);
     }
-    if (voto['codVotoPratico'] == 'N') {
-      voto['codVotoPratico'] = 'orale';
-    }
-    if (!materieVoti.containsKey(voto['desMateria'])) {
-      materieVoti[voto['desMateria']] = {'voti': []};
-    }
-    materieVoti[voto['desMateria']]['voti'].add([
-      voto['decValore'],
-      formatDate(voto['datGiorno']),
-      voto['codVotoPratico'],
-      voto['desCommento'],
-      voto['desProva']
-    ]);
   }
   return materieVoti;
 }
