@@ -1,7 +1,7 @@
 # argo_scuolanext_famiglia_unofficial_app
 App open-source non ufficiale per Argo ScuolaNext Famiglia.
 
-- [Download](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/download/1.0.0%2B3/app-release.apk)
+- [Download](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/download/1.0.0%2B4/app-release.apk)
 - [Sito dell'app](https://peppelg.space/argo_famiglia)
 - [Canale Telegram](https://t.me/scuolanext)
 
