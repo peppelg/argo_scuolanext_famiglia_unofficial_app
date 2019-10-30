@@ -1,3 +1,5 @@
+import 'package:argo_famiglia/aggiornamento.dart';
+import 'package:argo_famiglia/debugApi.dart';
 import 'package:flutter/material.dart';
 import 'redirectRoute.dart';
 import 'login.dart';
@@ -8,6 +10,8 @@ import 'lezioni.dart';
 import 'note.dart';
 import 'oggi.dart';
 import 'info.dart';
+import 'debugApi.dart';
+import 'aggiornamento.dart';
 
 /*void main() {
   runApp(MyApp());
@@ -65,7 +69,9 @@ class MyApp extends StatelessWidget {
         '/compiti': (BuildContext context) => new CompitiRoute(),
         '/lezioni': (BuildContext context) => new LezioniRoute(),
         '/oggi': (BuildContext context) => new OggiRoute(),
-        '/info': (BuildContext context) => new InfoRoute()
+        '/info': (BuildContext context) => new InfoRoute(),
+        '/debugApi': (BuildContext context) => new DebugApiRoute(),
+        '/aggiornamento': (BuildContext context) => new AggiornamentoRoute()
       },
     );
   }

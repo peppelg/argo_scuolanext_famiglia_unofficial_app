@@ -5,6 +5,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
 import 'dart:io';
+import 'dart:convert';
 
 var endpoint = 'https://www.portaleargo.it/famiglia/api/rest';
 var verifyHeaders = {
@@ -95,6 +96,15 @@ Future argoRequest(headers, request, params) async {
     return response.data;
   } catch (e) {
     return {'error': e.toString()};
+  }
+}
+
+Future simpleRequest(request) async {
+  var response = await argoRequest(fullHeaders, request, {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    return 'Errore: '+response['error'];
+  } else {
+    return jsonEncode(response);
   }
 }
 

@@ -11,7 +11,7 @@ description: App non ufficiale per Argo ScuolaNext.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+4
+version: 1.0.0+5
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -33,6 +33,8 @@ dependencies:
   flutter_datetime_picker: ^1.2.8
   flutter_markdown: ^0.3.0
   url_launcher: ^5.2.5
+  package_info: ^0.4.0+10
+  yaml: ^2.2.0
 
 dev_dependencies:
   flutter_test:
