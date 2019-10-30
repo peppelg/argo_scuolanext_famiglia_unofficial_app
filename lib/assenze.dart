@@ -24,11 +24,18 @@ class _AssenzeRouteState extends State<AssenzeRoute> {
           child: Card(
               child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
-                title: Text(assenza['assenza']),
+                title: Text(assenza['assenza'] +
+                    (assenza['giustificata'] == true
+                        ? ''
+                        : ' (da giustificare)')),
                 subtitle: Text(assenza['prof']),
                 leading: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[Icon(Icons.assignment_late)]))
+                    children: <Widget>[
+                      Icon((assenza['giustificata'] == true
+                          ? Icons.assignment_turned_in
+                          : Icons.assignment_late))
+                    ]))
           ]))));
     }
     return BackdropScaffold(

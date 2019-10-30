@@ -82,7 +82,7 @@ formatDate(date) {
 }
 
 bool isNumeric(String str) {
-  if(str == null) {
+  if (str == null) {
     return false;
   }
   return double.tryParse(str) != null;
@@ -100,9 +100,10 @@ Future argoRequest(headers, request, params) async {
 }
 
 Future simpleRequest(request) async {
-  var response = await argoRequest(fullHeaders, request, {'page': '1', 'start': '0', 'limit': '25'});
+  var response = await argoRequest(
+      fullHeaders, request, {'page': '1', 'start': '0', 'limit': '25'});
   if (response.containsKey('error')) {
-    return 'Errore: '+response['error'];
+    return 'Errore: ' + response['error'];
   } else {
     return jsonEncode(response);
   }
@@ -151,7 +152,8 @@ Future votigiornalieri() async {
   }
   var materieVoti = {};
   for (var voto in response['dati']) {
-    if (voto.containsKey('decValore') && isNumeric(voto['decValore'].toString())) {
+    if (voto.containsKey('decValore') &&
+        isNumeric(voto['decValore'].toString())) {
       voto['desMateria'] = voto['desMateria'] + ' ' + voto['docente'];
       if (voto['codVotoPratico'] == 'S') {
         voto['codVotoPratico'] = 'scritto';
@@ -202,9 +204,11 @@ Future assenze() async {
   var listaAssenze = [];
   for (var assenza in response['dati']) {
     listaAssenze.add({
-      'assenza': formatDate(assenza['datAssenza']) +
-          (assenza['flgDaGiustificare'] == true ? '' : ' (da giustificare)'),
-      'prof': assenza['registrataDa']
+      'assenza':
+          (assenza['desAssenza'] == '' ? '' : assenza['desAssenza'] + ' ') +
+              formatDate(assenza['datAssenza']),
+      'prof': assenza['registrataDa'],
+      'giustificata': assenza.containsKey('giustificataDa')
     });
   }
   return listaAssenze;
@@ -254,8 +258,11 @@ Future argomenti() async {
 }
 
 Future oggi(data) async {
-  data = DateFormat('yyyy-MM-dd').format(DateFormat('dd/MM/y').parse(data)).toString();
-  var response = await argoRequest(fullHeaders, 'oggi', {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
+  data = DateFormat('yyyy-MM-dd')
+      .format(DateFormat('dd/MM/y').parse(data))
+      .toString();
+  var response = await argoRequest(fullHeaders, 'oggi',
+      {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return [];
@@ -264,23 +271,44 @@ Future oggi(data) async {
   for (var tipo in response['dati']) {
     if (tipo['tipo'] == 'COM') {
       //compito assegnato
-      listaOggi.add({'tipo': 'compito', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'descrizione': tipo['dati']['desCompiti']});
+      listaOggi.add({
+        'tipo': 'compito',
+        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
+        'descrizione': tipo['dati']['desCompiti']
+      });
     }
     if (tipo['tipo'] == 'ARG') {
       //argomento
-      listaOggi.add({'tipo': 'argomento', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'descrizione': tipo['dati']['desArgomento']});
+      listaOggi.add({
+        'tipo': 'argomento',
+        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
+        'descrizione': tipo['dati']['desArgomento']
+      });
     }
     if (tipo['tipo'] == 'VOT') {
       //voto
-      listaOggi.add({'tipo': 'voto', 'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'], 'voto': tipo['dati']['decValore'].toString(), 'descrizione': 'Voto: '+tipo['dati']['decValore'].toString()});
+      listaOggi.add({
+        'tipo': 'voto',
+        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
+        'voto': tipo['dati']['decValore'].toString(),
+        'descrizione': 'Voto: ' + tipo['dati']['decValore'].toString()
+      });
     }
     if (tipo['tipo'] == 'NOT') {
       //nota
-      listaOggi.add({'tipo': 'nota', 'titolo': tipo['dati']['docente'], 'descrizione': tipo['dati']['desNota']});
+      listaOggi.add({
+        'tipo': 'nota',
+        'titolo': tipo['dati']['docente'],
+        'descrizione': tipo['dati']['desNota']
+      });
     }
     if (tipo['tipo'] == 'ASS') {
       //assenza
-      listaOggi.add({'tipo': 'assenza', 'titolo': tipo['dati']['registrataDa'], 'descrizione': 'Assenza.'});
+      listaOggi.add({
+        'tipo': 'assenza',
+        'titolo': tipo['dati']['registrataDa'],
+        'descrizione': 'Assenza.'
+      });
     }
   }
   return listaOggi;
