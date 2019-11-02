@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'database.dart';
 import 'api.dart';
 
 class RedirectRoute extends StatelessWidget {
@@ -13,10 +14,12 @@ class RedirectRoute extends StatelessWidget {
 }
 
 Future tryLogin(context) async {
-  var loggedIn = await loadToken();
-  if (loggedIn == 'OK') {
-    Navigator.of(context).pushReplacementNamed('/voti');
-  } else {
-    Navigator.of(context).pushReplacementNamed('/login');
+  if (await Database.init() == 'ok') {
+    var loggedIn = await loadToken();
+    if (loggedIn == 'OK') {
+      Navigator.of(context).pushReplacementNamed('/voti');
+    } else {
+      Navigator.of(context).pushReplacementNamed('/login');
+    }
   }
 }

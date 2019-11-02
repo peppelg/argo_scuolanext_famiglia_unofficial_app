@@ -1,11 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:intl/intl.dart';
 import 'dart:async';
-import 'dart:io';
 import 'dart:convert';
+import 'database.dart';
 
 var endpoint = 'https://www.portaleargo.it/famiglia/api/rest';
 var verifyHeaders = {
@@ -48,28 +46,20 @@ var fullHeaders = {
 
 Future saveToken(
     auth_token, cod_min, prg_scheda, prg_alunno, prg_scuola) async {
-  Directory appDocDir = await getApplicationDocumentsDirectory();
-  String appDocPath = appDocDir.path;
-  Hive.init(appDocPath);
-  var box = await Hive.openBox('argo_famiglia');
-  box.put('auth_token', auth_token);
-  box.put('cod_min', cod_min);
-  box.put('prg_scheda', prg_scheda);
-  box.put('prg_alunno', prg_alunno);
-  box.put('prg_scuola', prg_scuola);
+  await Database.put('auth_token', auth_token);
+  await Database.put('cod_min', cod_min);
+  await Database.put('prg_scheda', prg_scheda);
+  await Database.put('prg_alunno', prg_alunno);
+  await Database.put('prg_scuola', prg_scuola);
 }
 
 Future loadToken() async {
-  Directory appDocDir = await getApplicationDocumentsDirectory();
-  String appDocPath = appDocDir.path;
-  Hive.init(appDocPath);
-  var box = await Hive.openBox('argo_famiglia');
-  if (await box.get('auth_token') != null) {
-    fullHeaders['x-auth-token'] = await box.get('auth_token');
-    fullHeaders['x-cod-min'] = await box.get('cod_min');
-    fullHeaders['x-prg-scheda'] = await box.get('prg_scheda');
-    fullHeaders['x-prg-alunno'] = await box.get('prg_alunno');
-    fullHeaders['x-prg-scuola'] = await box.get('prg_scuola');
+  if (await Database.get('auth_token') != null) {
+    fullHeaders['x-auth-token'] = await Database.get('auth_token');
+    fullHeaders['x-cod-min'] = await Database.get('cod_min');
+    fullHeaders['x-prg-scheda'] = await Database.get('prg_scheda');
+    fullHeaders['x-prg-alunno'] = await Database.get('prg_alunno');
+    fullHeaders['x-prg-scuola'] = await Database.get('prg_scuola');
     return 'OK';
   } else {
     return 'login';
@@ -129,7 +119,7 @@ Future login(school, username, password) async {
         fullHeaders['x-prg-scheda'] = info[0]['prgScheda'].toString();
         fullHeaders['x-prg-scuola'] = info[0]['prgScuola'].toString();
         fullHeaders['x-prg-alunno'] = info[0]['prgAlunno'].toString();
-        saveToken(
+        await saveToken(
             fullHeaders['x-auth-token'],
             fullHeaders['x-cod-min'],
             fullHeaders['x-prg-scheda'],
@@ -255,6 +245,32 @@ Future argomenti() async {
     });
   }
   return listaArgomenti;
+}
+
+Future orario() async {
+  var response = await argoRequest(
+      fullHeaders, 'orario', {'page': '1', 'start': '0', 'limit': '25'});
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  var tabellaOrario = {};
+  for (var ora in response['dati']) {
+    if (!tabellaOrario.containsKey(ora['giorno'])) {
+      tabellaOrario[ora['giorno']] = [];
+    }
+    if (!ora.containsKey('lezioni')) {
+      ora['lezioni'] = [
+        {'materia': '---', 'docente': '---'}
+      ];
+    }
+    tabellaOrario[ora['giorno']].add({
+      'ora': ora['numOra'],
+      'materia': ora['lezioni'][0]['materia'],
+      'prof': ora['lezioni'][0]['docente']
+    });
+  }
+  return tabellaOrario;
 }
 
 Future oggi(data) async {

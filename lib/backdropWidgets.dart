@@ -33,6 +33,13 @@ getBackdrop(context) {
                 Expanded(
                     child: FlatButton(
                   onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/orario');
+                  },
+                  child: Text('Orario', style: TextStyle(color: Colors.white)),
+                )),
+                Expanded(
+                    child: FlatButton(
+                  onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/compiti');
                   },
                   child: Text('Compiti assegnati',
