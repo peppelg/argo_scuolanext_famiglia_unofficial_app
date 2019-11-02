@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'api.dart';
 import 'dart:async';
+import 'aggiornamento.dart';
 /*
 class LoginForm extends StatelessWidget {
   final schoolField = TextEditingController();
@@ -89,6 +90,7 @@ class _LoginRouteState extends State<LoginRoute> {
   final passwordField = TextEditingController();
   @override
   Widget build(BuildContext context) {
+    checkUpdatesDialog(context);
     return Scaffold(
         appBar: AppBar(
           title: Text('Scuolanext - Login'),

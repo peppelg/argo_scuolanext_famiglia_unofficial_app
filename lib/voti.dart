@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
+import 'aggiornamento.dart';
 
 class VotiRoute extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _VotiRouteState extends State<VotiRoute> {
 
   @override
   Widget build(BuildContext context) {
+    checkUpdatesDialog(context);
     var widgetsMaterie = <Widget>[];
     for (var materia in voti) {
       var listaVoti = <Widget>[];
