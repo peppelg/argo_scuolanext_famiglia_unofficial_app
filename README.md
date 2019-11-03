@@ -1,4 +1,8 @@
-# argo_scuolanext_famiglia_unofficial_app
+# Argo ScuolaNext Famiglia Unofficial App
+![GitHub All Releases](https://img.shields.io/github/downloads/peppelg/argo_scuolanext_famiglia_unofficial_app/total) 
+![GitHub Releases](https://img.shields.io/github/downloads/peppelg/argo_scuolanext_famiglia_unofficial_app/latest/total)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/peppelg/argo_scuolanext_famiglia_unofficial_app)
+
 App open-source non ufficiale per Argo ScuolaNext Famiglia.
 
 - [Download](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/latest/download/app-release.apk)
