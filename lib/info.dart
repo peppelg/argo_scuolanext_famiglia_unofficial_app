@@ -12,7 +12,7 @@ class InfoRoute extends StatelessWidget {
         backLayer: getBackdrop(context),
         frontLayer: Markdown(
             data:
-                "App open-source non ufficiale per Argo ScuolaNext.\n\n[VERIFICA AGGIORNAMENTI APP](https://app.aggiornamento)\n[Sito dell'app](https://peppelg.space/argo_famiglia)\n[Canale Telegram degli aggiornamenti](https://t.me/scuolanext)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n[Debug API](https://app.debug)\n\nSe l'app non funziona, vai sul sito e controlla se c'è una nuova versione. Se il problema persiste apri un'issue su GitHub.\n\n---\n*Icona creata da Prosymbols per www.flaticon.com*",
+                "App open-source non ufficiale per Argo ScuolaNext.\n\n[VERIFICA AGGIORNAMENTI APP](https://app.aggiornamento)\n[Sito dell'app](https://peppelg.space/argo-famiglia)\n[Canale Telegram degli aggiornamenti](https://t.me/scuolanext)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n[Debug API](https://app.debug)\n\nSe l'app non funziona, vai sul sito e controlla se c'è una nuova versione. Se il problema persiste apri un'issue su GitHub.\n\n---\n*Icona creata da Prosymbols per www.flaticon.com*",
             onTapLink: (href) {
               if (href == 'https://app.debug') {
                 Navigator.of(context).pushNamed('/debugApi');
