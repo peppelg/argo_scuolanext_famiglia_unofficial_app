@@ -19,9 +19,9 @@ getBackdrop(context) {
                 Expanded(
                     child: FlatButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/note');
+                    Navigator.of(context).pushReplacementNamed('/orario');
                   },
-                  child: Text('Note', style: TextStyle(color: Colors.white)),
+                  child: Text('Orario', style: TextStyle(color: Colors.white)),
                 )),
                 Expanded(
                     child: FlatButton(
@@ -33,9 +33,9 @@ getBackdrop(context) {
                 Expanded(
                     child: FlatButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/orario');
+                    Navigator.of(context).pushReplacementNamed('/note');
                   },
-                  child: Text('Orario', style: TextStyle(color: Colors.white)),
+                  child: Text('Note', style: TextStyle(color: Colors.white)),
                 )),
                 Expanded(
                     child: FlatButton(
