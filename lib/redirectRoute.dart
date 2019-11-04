@@ -36,9 +36,9 @@ Future tryLogin(context) async {
         }
       });
       quickActions.setShortcutItems(<ShortcutItem>[
-        ShortcutItem(type: 'open_orario', localizedTitle: 'Orario'),
-        ShortcutItem(type: 'open_oggi', localizedTitle: 'Cosa è successo oggi'),
-        ShortcutItem(type: 'open_compiti', localizedTitle: 'Compiti assegnati')
+        ShortcutItem(type: 'open_orario', localizedTitle: 'Orario', icon: 'timetable'),
+        ShortcutItem(type: 'open_oggi', localizedTitle: 'Cosa è successo oggi', icon: 'calendar'),
+        ShortcutItem(type: 'open_compiti', localizedTitle: 'Compiti assegnati', icon: 'homework')
       ]);
       Navigator.of(context).pushReplacementNamed(redirectTo);
     } else {

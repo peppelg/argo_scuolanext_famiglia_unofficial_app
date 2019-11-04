@@ -5,9 +5,12 @@
 
 App open-source non ufficiale per Argo ScuolaNext Famiglia.
 
-- [Download](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/latest/download/app-release.apk)
+- [Download ultima versione](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/latest/download/app-release.apk)
 - [Sito dell'app](https://peppelg.space/argo-famiglia)
 - [Canale Telegram](https://t.me/scuolanext)
 
 
-Icona creata da Prosymbols per www.flaticon.com
+---
+
+    Icona app creata da Prosymbols per www.flaticon.com. 
+    Icone "homework", "timetable", "calendar" create da Freepik per www.flaticon.com.
