@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
+import 'dart:async';
 import 'backdropWidgets.dart';
 import 'api.dart';
 import 'database.dart';
@@ -14,6 +15,8 @@ class OrarioRoute extends StatefulWidget {
 class _OrarioRouteState extends State<OrarioRoute> {
   Map tabellaOrario = {};
   final nuovoNomeMateria = TextEditingController();
+  final giornoKey = new GlobalKey();
+  var giornoOggi = '';
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
@@ -21,7 +24,12 @@ class _OrarioRouteState extends State<OrarioRoute> {
   Widget build(BuildContext context) {
     var orarioColumns = [DataColumn(label: Text(''))];
     for (var giorno in tabellaOrario.keys) {
-      orarioColumns.add(DataColumn(label: Text(giorno)));
+      if (giorno == giornoOggi) {
+        orarioColumns.add(DataColumn(
+            label: Text(giorno, key: giornoKey))); //co key viene scrollato
+      } else {
+        orarioColumns.add(DataColumn(label: Text(giorno)));
+      }
     }
     var orarioRows = <DataRow>[];
     var tborario = {}; //orario ordinato in base all'ora
@@ -79,9 +87,19 @@ class _OrarioRouteState extends State<OrarioRoute> {
       nuovoOrario = await orario();
       await Database.put('orario', nuovoOrario);
     }
+    var days = tabellaOrario.keys.toList().asMap();
     setState(() {
       tabellaOrario = nuovoOrario;
+      if (days.containsKey(DateTime.now().weekday - 1)) {
+        giornoOggi = days[DateTime.now().weekday - 1];
+      } else {
+        giornoOggi = '';
+      }
     });
+    if (giornoOggi != '') {
+      Scrollable.ensureVisible(giornoKey.currentContext,
+          duration: Duration(milliseconds: 1000)); //non funzia la prima volta, fixare
+    }
   }
 
   Future modificaMateriaDialog(giorno, ora, context) async {

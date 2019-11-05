@@ -154,13 +154,13 @@ Future votigiornalieri() async {
       if (!materieVoti.containsKey(voto['desMateria'])) {
         materieVoti[voto['desMateria']] = {'voti': []};
       }
-      materieVoti[voto['desMateria']]['voti'].add([
-        voto['decValore'],
-        formatDate(voto['datGiorno']),
-        voto['codVotoPratico'],
-        voto['desCommento'],
-        voto['desProva']
-      ]);
+      materieVoti[voto['desMateria']]['voti'].add({
+        'voto': voto['decValore'],
+        'data': formatDate(voto['datGiorno']),
+        'tipo': voto['codVotoPratico'],
+        'commento': voto['desCommento'],
+        'descrizione': voto['desProva']
+      });
     }
   }
   return materieVoti;
