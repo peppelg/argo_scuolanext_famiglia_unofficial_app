@@ -98,7 +98,8 @@ class _OrarioRouteState extends State<OrarioRoute> {
     });
     if (giornoOggi != '') {
       Scrollable.ensureVisible(giornoKey.currentContext,
-          duration: Duration(milliseconds: 1000)); //non funzia la prima volta, fixare
+          duration:
+              Duration(milliseconds: 1000)); //non funzia la prima volta, fixare
     }
   }
 

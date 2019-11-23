@@ -1,7 +1,7 @@
-import 'package:argo_famiglia/aggiornamento.dart';
-import 'package:argo_famiglia/debugApi.dart';
 import 'package:flutter/material.dart';
+import 'package:workmanager/workmanager.dart';
 import 'redirectRoute.dart';
+import 'database.dart';
 import 'login.dart';
 import 'voti.dart';
 import 'assenze.dart';
@@ -13,8 +13,44 @@ import 'orario.dart';
 import 'info.dart';
 import 'debugApi.dart';
 import 'aggiornamento.dart';
+import 'impostazioni.dart';
 
-void main() {
+var theme;
+
+void callbackDispatcher() {
+  Workmanager.executeTask((task, inputData) async {
+    await notificaNuoviVoti();
+    return Future.value(true);
+  });
+}
+
+Future main() async {
+  var settings = await Database.get('settings');
+  if (settings == null) {
+    settings = {'notifications': false, 'dark': false};
+  }
+  if (settings['dark'] == true) {
+    theme = ThemeData(
+      brightness: Brightness.dark,
+    );
+  } else {
+    theme = ThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.blue,
+        buttonTheme: ButtonThemeData(
+          buttonColor: Colors.blue,
+          textTheme: ButtonTextTheme.primary,
+        ));
+  }
+  if (settings['notifications'] == true) {
+    Workmanager.initialize(callbackDispatcher);
+    Workmanager.registerPeriodicTask('controllaVoti', 'controllaVoti',
+        frequency: Duration(hours: 1, minutes: 30));
+  } else {
+    try {
+      Workmanager.cancelAll();
+    } catch (e) {}
+  }
   runApp(MyApp());
 }
 
@@ -24,6 +60,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Argo Famiglia Unofficial',
       home: RedirectRoute(),
+      theme: theme,
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+      ),
       onGenerateRoute: (settings) {
         var route;
         switch (settings.name) {
@@ -80,6 +120,11 @@ class MyApp extends StatelessWidget {
           case '/aggiornamento':
             {
               route = AggiornamentoRoute();
+            }
+            break;
+          case '/impostazioni':
+            {
+              route = ImpostazioniRoute();
             }
             break;
         }

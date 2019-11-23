@@ -33,9 +33,7 @@ class _AggiornamentoRouteState extends State<AggiornamentoRoute> {
           padding: EdgeInsets.only(top: 30),
           child: Align(
               alignment: Alignment.bottomCenter,
-              child: FlatButton(
-                  color: Colors.blue,
-                  textColor: Colors.white,
+              child: RaisedButton(
                   onPressed: () {
                     launch('https://peppelg.space/argo_famiglia');
                   },

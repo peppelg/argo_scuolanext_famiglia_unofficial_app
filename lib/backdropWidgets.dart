@@ -64,9 +64,9 @@ getBackdrop(context) {
                 Expanded(
                     child: FlatButton(
                   onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/info');
+                    Navigator.of(context).pushReplacementNamed('/impostazioni');
                   },
-                  child: Text('Informazioni',
+                  child: Text('Impostazioni',
                       style: TextStyle(color: Colors.white)),
                 ))
               ])));

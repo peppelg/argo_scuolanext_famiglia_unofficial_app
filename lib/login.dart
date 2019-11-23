@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'api.dart';
 import 'dart:async';
 import 'aggiornamento.dart';
+
 /*
 class LoginForm extends StatelessWidget {
   final schoolField = TextEditingController();
@@ -79,11 +80,12 @@ Future doLogin(school, username, password) async {
 }
 */
 class LoginRoute extends StatefulWidget {
-  @override 
+  @override
   State<StatefulWidget> createState() {
     return _LoginRouteState();
   }
 }
+
 class _LoginRouteState extends State<LoginRoute> {
   final schoolField = TextEditingController();
   final usernameField = TextEditingController();
@@ -128,9 +130,7 @@ class _LoginRouteState extends State<LoginRoute> {
               )),
           Padding(
               padding: EdgeInsets.all(20.0),
-              child: FlatButton(
-                color: Colors.blue,
-                textColor: Colors.white,
+              child: RaisedButton(
                 onPressed: () {
                   doLogin(context, schoolField.text, usernameField.text,
                       passwordField.text);

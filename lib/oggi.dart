@@ -48,7 +48,9 @@ class _OggiRouteState extends State<OggiRoute> {
                   giorno = formatDate(date.toString());
                   WidgetsBinding.instance.addPostFrameCallback(
                       (_) => _refreshIndicatorKey.currentState.show());
-                }, currentTime: DateFormat('dd/MM/y').parse(giorno), locale: LocaleType.it);
+                },
+                    currentTime: DateFormat('dd/MM/y').parse(giorno),
+                    locale: LocaleType.it);
               })
         ],
         frontLayer: RefreshIndicator(

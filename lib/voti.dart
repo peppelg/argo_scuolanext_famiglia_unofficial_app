@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
 import 'aggiornamento.dart';
+import 'database.dart';
 
 class VotiRoute extends StatefulWidget {
   @override
@@ -57,12 +59,9 @@ class _VotiRouteState extends State<VotiRoute> {
     setState(() {
       voti = nuoviVoti;
     });
-  }
-
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+    if (nuoviVoti.isNotEmpty) {
+      await Database.put('voti', nuoviVoti);
+    }
   }
 
   schedaVoto(voto) {
@@ -149,5 +148,68 @@ class _VotiRouteState extends State<VotiRoute> {
       mediaVoti = '0';
     }
     return mediaVoti;
+  }
+
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance
+        .addPostFrameCallback((_) => _refreshIndicatorKey.currentState.show());
+  }
+}
+
+semplificaVoti(listaVoti) {
+  //che cacata
+  var lista = [];
+  listaVoti.forEach((nomeMateria, materia) {
+    for (var voto in materia['voti']) {
+      lista.add(voto['voto'].toString() +
+          ' di ' +
+          nomeMateria +
+          ' del ' +
+          voto['data']);
+    }
+  });
+  return lista;
+}
+
+Future notificaNuoviVoti() async {
+  await loadToken(); //fa login
+  //flutter plugin notificazione
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      new FlutterLocalNotificationsPlugin();
+  var initializationSettingsAndroid =
+      new AndroidInitializationSettings('homework');
+  var initializationSettingsIOS = new IOSInitializationSettings();
+  var initializationSettings = new InitializationSettings(
+      initializationSettingsAndroid, initializationSettingsIOS);
+  flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  //fine cacata
+  //cerca voti nuovi
+  var votiAttuali = await Database.get('voti');
+  var nuoviVoti = await votigiornalieri();
+  if (votiAttuali.isNotEmpty && nuoviVoti.isNotEmpty) {
+    await Database.put('voti', nuoviVoti);
+    votiAttuali = semplificaVoti(votiAttuali);
+    nuoviVoti = semplificaVoti(nuoviVoti);
+    /*
+    votiAttuali = [
+      '6.0 di cosita (Prof. testings) del 20/09/2019'
+    ];
+    */
+    for (var voto in nuoviVoti) {
+      if (!votiAttuali.contains(voto)) {
+        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+            'nuovo-voto',
+            'Notifica voto',
+            'Notifica nuovi voti su Argo ScuolaNext.',
+            groupKey: 'nuovo-voto');
+        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+        var platformChannelSpecifics = NotificationDetails(
+            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+        flutterLocalNotificationsPlugin.show(nuoviVoti.indexOf(voto),
+            'Nuovo voto', 'Hai preso un ' + voto, platformChannelSpecifics,
+            payload: voto);
+      }
+    }
   }
 }

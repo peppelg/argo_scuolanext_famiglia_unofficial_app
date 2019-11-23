@@ -26,9 +26,7 @@ class _DebugApiRouteState extends State<DebugApiRoute> {
               labelText: 'Richiesta',
             ),
           ),
-          FlatButton(
-              color: Colors.blue,
-              textColor: Colors.white,
+          RaisedButton(
               onPressed: () {
                 doReq(request.text);
               },

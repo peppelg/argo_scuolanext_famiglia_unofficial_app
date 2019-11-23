@@ -14,12 +14,20 @@ class Database {
     }
   }
 
+  static Future autoInit() async {
+    if (box == null) {
+      await Database.init();
+    }
+  }
+
   static Future put(key, value) async {
+    await autoInit();
     var r = await box.put(key, value);
     return r;
   }
 
   static Future get(key) async {
+    await autoInit();
     var r = await box.get(key);
     return r;
   }

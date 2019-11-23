@@ -37,6 +37,8 @@ dependencies:
   yaml: ^2.2.0
   quick_actions: ^0.3.2+2
   percent_indicator: ^2.1.1+1
+  flutter_local_notifications: ^0.8.4
+  workmanager: ^0.1.4
 
 dev_dependencies:
   flutter_test:

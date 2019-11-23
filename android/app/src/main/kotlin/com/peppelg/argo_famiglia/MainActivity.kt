@@ -1,4 +1,4 @@
-package com.peppelg.argo_famiglia.argo_famiglia
+package com.peppelg.argo_famiglia
 
 import android.os.Bundle
 

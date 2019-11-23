@@ -24,10 +24,11 @@ class _NoteRouteState extends State<NoteRoute> {
           child: Card(
               child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
             ListTile(
-              title: Text(nota['data'] + ' ' + nota['prof']),
-              subtitle: Text(nota['nota']),
-              leading: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[Icon(Icons.warning)])
-            )
+                title: Text(nota['data'] + ' ' + nota['prof']),
+                subtitle: Text(nota['nota']),
+                leading: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[Icon(Icons.warning)]))
           ]))));
     }
     return BackdropScaffold(
