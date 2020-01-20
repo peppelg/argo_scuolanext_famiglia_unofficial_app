@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:background_fetch/background_fetch.dart';
 import 'package:backdrop/backdrop.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'backdropWidgets.dart';
 import 'database.dart';
+import 'api.dart';
 
 class ImpostazioniRoute extends StatefulWidget {
   @override
@@ -16,6 +18,7 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
   var settings;
   var settings_notifications = false;
   var settings_dark = false;
+  final intervalloNotificheController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     var widgetsImpostazioni = <Widget>[];
@@ -25,10 +28,53 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
           title: Text('Notifiche nuovi voti (beta)'),
           value: settings_notifications,
           onChanged: (bool value) async {
-            setState(() {
-              settings_notifications = value;
-            });
-            await aggiornaImpostazioni();
+            if (value == true) {
+              await showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                        title: Text(
+                            'Ogni quanti minuti devo controllare se ci sono nuovi voti? (minimo 15 minuti)'),
+                        content: SingleChildScrollView(
+                            child: ListBody(children: <Widget>[
+                          TextField(
+                            controller: intervalloNotificheController,
+                            obscureText: false,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              labelText: 'Minuti',
+                            ),
+                          )
+                        ])),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Salva'),
+                            onPressed: () async {
+                              if (isNumeric(
+                                      intervalloNotificheController.text) &&
+                                  int.parse(
+                                          intervalloNotificheController.text) >=
+                                      15) {
+                                Navigator.of(context).pop();
+                                setState(() {
+                                  settings_notifications = value;
+                                });
+                                await aggiornaImpostazioni();
+                              } else {
+                                //numero non valido
+                                intervalloNotificheController.text = '60';
+                              }
+                            },
+                          ),
+                        ]);
+                  });
+            } else {
+              setState(() {
+                settings_notifications = value;
+              });
+              await aggiornaImpostazioni();
+            }
           },
           secondary: Icon(Icons.notifications),
         ),
@@ -76,11 +122,17 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
   Future aggiornaImpostazioni() async {
     settings['notifications'] = settings_notifications;
     settings['dark'] = settings_dark;
+    settings['notifications_check_interval'] =
+        int.parse(intervalloNotificheController.text);
     await Database.put('settings', settings);
-    if (settings['notifications'] == false) {
-      try {
-        Workmanager.cancelAll();
-      } catch (e) {}
+    if (settings['notifications'] == true) {
+      BackgroundFetch.start().then((int status) {
+        print('[BackgroundFetch] start success: $status');
+      });
+    } else {
+      BackgroundFetch.stop().then((int status) {
+        print('[BackgroundFetch] stop success: $status');
+      });
     }
     Fluttertoast.showToast(msg: 'Riavvia l\'app per applicare le modifiche.');
   }
@@ -88,12 +140,21 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
   Future visualizzaImpostazioni() async {
     settings = await Database.get('settings');
     if (settings == null) {
-      settings = {'notifications': false, 'dark': false};
+      settings = {
+        'notifications': false,
+        'dark': false,
+        'notifications_check_interval': 60
+      };
       await Database.put('settings', settings);
+    }
+    if (!settings.containsKey('notifications_check_interval')) {
+      settings['notifications_check_interval'] = 60;
     }
     setState(() {
       settings_notifications = settings['notifications'];
       settings_dark = settings['dark'];
+      intervalloNotificheController.text =
+          settings['notifications_check_interval'].toString();
     });
   }
 

@@ -173,43 +173,41 @@ semplificaVoti(listaVoti) {
 }
 
 Future notificaNuoviVoti() async {
-  await loadToken(); //fa login
-  //flutter plugin notificazione
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-      new FlutterLocalNotificationsPlugin();
-  var initializationSettingsAndroid =
-      new AndroidInitializationSettings('homework');
-  var initializationSettingsIOS = new IOSInitializationSettings();
-  var initializationSettings = new InitializationSettings(
-      initializationSettingsAndroid, initializationSettingsIOS);
-  flutterLocalNotificationsPlugin.initialize(initializationSettings);
-  //fine cacata
-  //cerca voti nuovi
-  var votiAttuali = await Database.get('voti');
-  var nuoviVoti = await votigiornalieri();
-  if (votiAttuali.isNotEmpty && nuoviVoti.isNotEmpty) {
-    await Database.put('voti', nuoviVoti);
-    votiAttuali = semplificaVoti(votiAttuali);
-    nuoviVoti = semplificaVoti(nuoviVoti);
-    /*
-    votiAttuali = [
-      '6.0 di cosita (Prof. testings) del 20/09/2019'
-    ];
-    */
-    for (var voto in nuoviVoti) {
-      if (!votiAttuali.contains(voto)) {
-        var androidPlatformChannelSpecifics = AndroidNotificationDetails(
-            'nuovo-voto',
-            'Notifica voto',
-            'Notifica nuovi voti su Argo ScuolaNext.',
-            groupKey: 'nuovo-voto');
-        var iOSPlatformChannelSpecifics = IOSNotificationDetails();
-        var platformChannelSpecifics = NotificationDetails(
-            androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
-        flutterLocalNotificationsPlugin.show(nuoviVoti.indexOf(voto),
-            'Nuovo voto', 'Hai preso un ' + voto, platformChannelSpecifics,
-            payload: voto);
+  try {
+    await loadToken(); //fa login
+    //flutter plugin notificazione
+    FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+        new FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid =
+        new AndroidInitializationSettings('homework');
+    var initializationSettingsIOS = new IOSInitializationSettings();
+    var initializationSettings = new InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    //fine cacata
+    //cerca voti nuovi
+    var votiAttuali = await Database.get('voti');
+    var nuoviVoti = await votigiornalieri();
+    if (votiAttuali.isNotEmpty && nuoviVoti.isNotEmpty) {
+      await Database.put('voti', nuoviVoti);
+      votiAttuali = semplificaVoti(votiAttuali);
+      nuoviVoti = semplificaVoti(nuoviVoti);
+      //votiAttuali = ['6.0 di cosita (Prof. testings) del 20/09/2019'];
+      for (var voto in nuoviVoti) {
+        if (!votiAttuali.contains(voto)) {
+          var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+              'nuovo-voto',
+              'Notifica voto',
+              'Notifica nuovi voti su Argo ScuolaNext.',
+              groupKey: 'nuovo-voto');
+          var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+          var platformChannelSpecifics = NotificationDetails(
+              androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+          flutterLocalNotificationsPlugin.show(nuoviVoti.indexOf(voto),
+              'Nuovo voto', 'Hai preso un ' + voto, platformChannelSpecifics,
+              payload: voto);
+        }
       }
     }
-  }
+  } catch (e) {}
 }

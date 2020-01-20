@@ -3,8 +3,6 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:drawable="@android:color/white" />
     <item>
-        <bitmap
-            android:gravity="center"
-            android:src="@mipmap/launcher_icon" />
-    </item> 
+        <bitmap android:gravity="center" android:src="@mipmap/launcher_icon" />
+    </item>
 </layer-list>

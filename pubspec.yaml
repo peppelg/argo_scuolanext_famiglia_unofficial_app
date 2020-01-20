@@ -11,7 +11,7 @@ description: App non ufficiale per Argo ScuolaNext.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.1+1
+version: 1.0.2+1
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -23,22 +23,21 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
-  dio: ^3.0.3
+  dio: ^3.0.8
   fluttertoast: ^3.1.3
-  hive: ^1.1.1
-  hive_flutter: ^0.2.1
-  path_provider: ^1.4.0
-  backdrop: ^0.1.8
-  intl: ^0.16.0
-  flutter_datetime_picker: ^1.2.8
-  flutter_markdown: ^0.3.0
-  url_launcher: ^5.2.5
-  package_info: ^0.4.0+10
+  hive: ^1.3.0
+  path_provider: ^1.5.1
+  backdrop: ^0.2.8
+  intl: ^0.16.1
+  flutter_datetime_picker: ^1.3.4
+  flutter_markdown: ^0.3.2
+  url_launcher: ^5.4.1
+  package_info: ^0.4.0+13
   yaml: ^2.2.0
-  quick_actions: ^0.3.2+2
+  quick_actions: ^0.4.0+1
   percent_indicator: ^2.1.1+1
-  flutter_local_notifications: ^0.8.4
-  workmanager: ^0.1.4
+  flutter_local_notifications: ^1.1.1
+  background_fetch: ^0.4.0
 
 dev_dependencies:
   flutter_test:
@@ -47,7 +46,7 @@ dev_dependencies:
 
 flutter_icons:
   android: "launcher_icon" 
-  ios: false
+  ios: true
   image_path: "assets/icon/icon.png"
 
 # For information on the generic Dart part of this file, see the

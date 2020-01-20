@@ -151,6 +151,9 @@ Future votigiornalieri() async {
       if (voto['codVotoPratico'] == 'N') {
         voto['codVotoPratico'] = 'orale';
       }
+      if (voto['codVotoPratico'] == 'P') {
+        voto['codVotoPratico'] = 'pratico';
+      }
       if (!materieVoti.containsKey(voto['desMateria'])) {
         materieVoti[voto['desMateria']] = {'voti': []};
       }
@@ -192,13 +195,33 @@ Future assenze() async {
     return [];
   }
   var listaAssenze = [];
+  var testoAssenza = '';
   for (var assenza in response['dati']) {
+    testoAssenza =
+        (assenza['desAssenza'] == '' ? '' : assenza['desAssenza'] + ' ') +
+            formatDate(assenza['datAssenza']);
+    try {
+      if (assenza['codEvento'] == 'I' && assenza.containsKey('oraAssenza')) {
+        //ingresso + dopo (ritardo)
+        testoAssenza = 'Ritardo ' +
+            testoAssenza +
+            ' ore ' +
+            RegExp(r'([01]?[0-9]|2[0-3]):[0-5][0-9]')
+                .firstMatch(assenza['oraAssenza'])
+                .group(0);
+      }
+    } catch (e) {}
     listaAssenze.add({
-      'assenza':
-          (assenza['desAssenza'] == '' ? '' : assenza['desAssenza'] + ' ') +
-              formatDate(assenza['datAssenza']),
-      'prof': assenza['registrataDa'],
+      'assenza': testoAssenza,
+      'prof': 'Registrata da: ' +
+              assenza['registrataDa'].replaceAll('(', '').replaceAll(')', '') +
+              (assenza.containsKey('giustificataDa')
+      ? '\nGiustificata da: ' +
+          assenza['giustificataDa'].replaceAll('(', '').replaceAll(')', '')
+      : ''),
       'giustificata': assenza.containsKey('giustificataDa')
+          ? true
+          : !assenza['flgDaGiustificare']
     });
   }
   return listaAssenze;

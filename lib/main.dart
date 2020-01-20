@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:workmanager/workmanager.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
+import 'package:background_fetch/background_fetch.dart';
 import 'redirectRoute.dart';
 import 'database.dart';
 import 'login.dart';
@@ -17,17 +19,43 @@ import 'impostazioni.dart';
 
 var theme;
 
-void callbackDispatcher() {
-  Workmanager.executeTask((task, inputData) async {
-    await notificaNuoviVoti();
-    return Future.value(true);
-  });
+void backgroundFetchHeadlessTask() async {
+  await notificaNuoviVoti();
+  print('[BackgroundFetch] Headless event received.');
+  BackgroundFetch.finish();
 }
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   var settings = await Database.get('settings');
   if (settings == null) {
-    settings = {'notifications': false, 'dark': false};
+    settings = {
+      'notifications': false,
+      'dark': false,
+      'notifications_check_interval': 60
+    };
+  }
+  BackgroundFetch.configure(
+      BackgroundFetchConfig(
+          minimumFetchInterval:
+              settings.containsKey('notifications_check_interval')
+                  ? settings['notifications_check_interval']
+                  : 60,
+          stopOnTerminate: false,
+          startOnBoot: true,
+          enableHeadless: true), () async {
+    print('[BackgroundFetch] Event received');
+    await notificaNuoviVoti();
+    BackgroundFetch.finish();
+  });
+  if (settings['notifications'] == true) {
+    BackgroundFetch.start().then((int status) {
+      print('[BackgroundFetch] start success: $status');
+    });
+  } else {
+    BackgroundFetch.stop().then((int status) {
+      print('[BackgroundFetch] stop success: $status');
+    });
   }
   if (settings['dark'] == true) {
     theme = ThemeData(
@@ -42,16 +70,11 @@ Future main() async {
           textTheme: ButtonTextTheme.primary,
         ));
   }
-  if (settings['notifications'] == true) {
-    Workmanager.initialize(callbackDispatcher);
-    Workmanager.registerPeriodicTask('controllaVoti', 'controllaVoti',
-        frequency: Duration(hours: 1, minutes: 30));
-  } else {
-    try {
-      Workmanager.cancelAll();
-    } catch (e) {}
-  }
   runApp(MyApp());
+  settings = await Database.get('settings');
+  if (settings['notifications'] == true) {
+    BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  }
 }
 
 class MyApp extends StatelessWidget {
