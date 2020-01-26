@@ -33,22 +33,22 @@ class _VotiRouteState extends State<VotiRoute> {
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['orale'], radius: 60.0),
-                Text('Media orale', style: TextStyle(color: Colors.black54))
+                Opacity(opacity: 54.0, child: Text('Media orale'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['scritto'], radius: 60.0),
-                Text('Media scritto', style: TextStyle(color: Colors.black54))
+                Opacity(opacity: 54.0, child: Text('Media scritto'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['pratico'], radius: 60.0),
-                Text('Media pratico', style: TextStyle(color: Colors.black54))
+                Opacity(opacity: 54.0, child: Text('Media pratico'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['ScrittoOrale'], radius: 60.0),
-                Text('Media totale', style: TextStyle(color: Colors.black54))
+                Opacity(opacity: 54.0, child: Text('Media totale'))
               ])),
             ]),
         Divider()
