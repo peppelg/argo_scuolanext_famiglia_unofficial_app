@@ -34,6 +34,7 @@ Future main() async {
       'dark': false,
       'notifications_check_interval': 60
     };
+    Database.put('settings', settings);
   }
   BackgroundFetch.configure(
       BackgroundFetchConfig(
@@ -73,13 +74,16 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Argo Famiglia Unofficial',
       home: RedirectRoute(),
-      theme:
-          ThemeData(brightness: darkTheme ? Brightness.dark : Brightness.light),
-      /*
+      themeMode: darkTheme ? ThemeMode.dark : ThemeMode.light,
+      theme: ThemeData(
+          brightness: Brightness.light,
+          buttonTheme: ButtonThemeData(
+            buttonColor: Colors.blue,
+            textTheme: ButtonTextTheme.primary,
+          )),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
-      */
       onGenerateRoute: (settings) {
         var route;
         switch (settings.name) {

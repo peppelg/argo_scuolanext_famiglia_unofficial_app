@@ -33,22 +33,22 @@ class _VotiRouteState extends State<VotiRoute> {
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['orale'], radius: 60.0),
-                Opacity(opacity: 54.0, child: Text('Media orale'))
+                Opacity(opacity: 0.6, child: Text('Media orale'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['scritto'], radius: 60.0),
-                Opacity(opacity: 54.0, child: Text('Media scritto'))
+                Opacity(opacity: 0.6, child: Text('Media scritto'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['pratico'], radius: 60.0),
-                Opacity(opacity: 54.0, child: Text('Media pratico'))
+                Opacity(opacity: 0.6, child: Text('Media pratico'))
               ])),
               Expanded(
                   child: Column(children: <Widget>[
                 cerchioVoto(media['ScrittoOrale'], radius: 60.0),
-                Opacity(opacity: 54.0, child: Text('Media totale'))
+                Opacity(opacity: 0.6, child: Text('Media totale'))
               ])),
             ]),
         Divider()
@@ -165,6 +165,7 @@ class _VotiRouteState extends State<VotiRoute> {
   }
 
   mediaVoti(listaVoti) {
+    //magno spaghetti
     var risultato = {};
     var medie = {
       'globale': {'numeroVoti': 0, 'sommaVoti': 0.0},
@@ -177,17 +178,13 @@ class _VotiRouteState extends State<VotiRoute> {
       if (!voto['commento'].contains('non fa media')) {
         medie['globale']['numeroVoti']++;
         medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString());
-        medie[voto['tipo']]['numeroVoti']++;
-        medie[voto['tipo']]['sommaVoti'] +=
-            double.parse(voto['voto'].toString());
+        if (medie.containsKey(voto['tipo'])) {
+          medie[voto['tipo']]['numeroVoti']++;
+          medie[voto['tipo']]['sommaVoti'] +=
+              double.parse(voto['voto'].toString());
+        }
       }
     }
-    medie['ScrittoOrale']['numeroVoti'] += medie['scritto']['numeroVoti'];
-    medie['ScrittoOrale']['numeroVoti'] += medie['orale']['numeroVoti'];
-    medie['ScrittoOrale']['numeroVoti'] += medie['pratico']['numeroVoti'];
-    medie['ScrittoOrale']['sommaVoti'] += medie['scritto']['sommaVoti'];
-    medie['ScrittoOrale']['sommaVoti'] += medie['orale']['sommaVoti'];
-    medie['ScrittoOrale']['sommaVoti'] += medie['pratico']['sommaVoti'];
     medie.forEach((tipo, media) {
       var mediaVoto =
           (media['sommaVoti'] / media['numeroVoti']).toStringAsFixed(2);
@@ -196,6 +193,26 @@ class _VotiRouteState extends State<VotiRoute> {
       }
       risultato[tipo] = mediaVoto;
     });
+    //fa media scritto e orale
+    if (double.parse(risultato['orale']) > 0) {
+      medie['ScrittoOrale']['numeroVoti']++;
+      medie['ScrittoOrale']['sommaVoti'] += double.parse(risultato['orale']);
+    }
+    if (double.parse(risultato['scritto']) > 0) {
+      medie['ScrittoOrale']['numeroVoti']++;
+      medie['ScrittoOrale']['sommaVoti'] += double.parse(risultato['scritto']);
+    }
+    if (double.parse(risultato['pratico']) > 0) {
+      medie['ScrittoOrale']['numeroVoti']++;
+      medie['ScrittoOrale']['sommaVoti'] += double.parse(risultato['pratico']);
+    }
+    var mediaVoto = (medie['ScrittoOrale']['sommaVoti'] /
+            medie['ScrittoOrale']['numeroVoti'])
+        .toStringAsFixed(2);
+    if (mediaVoto == 'NaN') {
+      mediaVoto = '0';
+    }
+    risultato['ScrittoOrale'] = mediaVoto;
     return risultato;
   }
 
