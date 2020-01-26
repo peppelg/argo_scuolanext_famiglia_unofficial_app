@@ -17,7 +17,7 @@ import 'debugApi.dart';
 import 'aggiornamento.dart';
 import 'impostazioni.dart';
 
-var theme;
+var darkTheme = false;
 
 void backgroundFetchHeadlessTask() async {
   await notificaNuoviVoti();
@@ -43,7 +43,9 @@ Future main() async {
                   : 60,
           stopOnTerminate: false,
           startOnBoot: true,
-          enableHeadless: true), () async {
+          enableHeadless: true,
+          requiredNetworkType: BackgroundFetchConfig.NETWORK_TYPE_ANY),
+      () async {
     print('[BackgroundFetch] Event received');
     await notificaNuoviVoti();
     BackgroundFetch.finish();
@@ -57,19 +59,7 @@ Future main() async {
       print('[BackgroundFetch] stop success: $status');
     });
   }
-  if (settings['dark'] == true) {
-    theme = ThemeData(
-      brightness: Brightness.dark,
-    );
-  } else {
-    theme = ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.blue,
-        buttonTheme: ButtonThemeData(
-          buttonColor: Colors.blue,
-          textTheme: ButtonTextTheme.primary,
-        ));
-  }
+  darkTheme = settings['dark'];
   runApp(MyApp());
   settings = await Database.get('settings');
   if (settings['notifications'] == true) {
@@ -83,10 +73,13 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Argo Famiglia Unofficial',
       home: RedirectRoute(),
-      theme: theme,
+      theme:
+          ThemeData(brightness: darkTheme ? Brightness.dark : Brightness.light),
+      /*
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),
+      */
       onGenerateRoute: (settings) {
         var route;
         switch (settings.name) {

@@ -24,12 +24,40 @@ class _VotiRouteState extends State<VotiRoute> {
     checkUpdatesDialog(context);
     var widgetsMaterie = <Widget>[];
     voti.forEach((nomeMateria, materia) {
-      var widgetsVoti = <Widget>[];
+      var media = mediaVoti(materia['voti']);
+      var widgetsVoti = <Widget>[
+        Divider(),
+        Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                  child: Column(children: <Widget>[
+                cerchioVoto(media['orale'], radius: 60.0),
+                Text('Media orale', style: TextStyle(color: Colors.black54))
+              ])),
+              Expanded(
+                  child: Column(children: <Widget>[
+                cerchioVoto(media['scritto'], radius: 60.0),
+                Text('Media scritto', style: TextStyle(color: Colors.black54))
+              ])),
+              Expanded(
+                  child: Column(children: <Widget>[
+                cerchioVoto(media['pratico'], radius: 60.0),
+                Text('Media pratico', style: TextStyle(color: Colors.black54))
+              ])),
+              Expanded(
+                  child: Column(children: <Widget>[
+                cerchioVoto(media['ScrittoOrale'], radius: 60.0),
+                Text('Media totale', style: TextStyle(color: Colors.black54))
+              ])),
+            ]),
+        Divider()
+      ];
       for (var voto in materia['voti']) {
         widgetsVoti.add(schedaVoto(voto));
       }
       widgetsMaterie.add(ExpansionTile(
-          leading: cerchioVoto(mediaVoti(materia['voti'])),
+          leading: cerchioVoto(media['globale']),
           title: Text(nomeMateria),
           children: widgetsVoti));
     });
@@ -111,10 +139,10 @@ class _VotiRouteState extends State<VotiRoute> {
             )));
   }
 
-  cerchioVoto(voto) {
+  cerchioVoto(voto, {radius = 40.0}) {
     voto = double.parse(voto);
     return CircularPercentIndicator(
-      radius: 40.0,
+      radius: radius,
       lineWidth: 5.0,
       percent: voto / 10,
       center: Text(voto.toString()),
@@ -126,28 +154,49 @@ class _VotiRouteState extends State<VotiRoute> {
     voto = double.parse(voto);
     if (voto <= 0) {
       return Colors.white;
-    }
-    if (voto >= 6) {
+    } else if (voto >= 6) {
       return Colors.green;
+    } else if (voto >= 5 && voto < 6) {
+      //5
+      return Colors.orange;
     } else {
       return Colors.red;
     }
   }
 
   mediaVoti(listaVoti) {
-    double sommaVoti = 0;
-    int numeroVoti = 0;
+    var risultato = {};
+    var medie = {
+      'globale': {'numeroVoti': 0, 'sommaVoti': 0.0},
+      'scritto': {'numeroVoti': 0, 'sommaVoti': 0.0},
+      'orale': {'numeroVoti': 0, 'sommaVoti': 0.0},
+      'pratico': {'numeroVoti': 0, 'sommaVoti': 0.0},
+      'ScrittoOrale': {'numeroVoti': 0, 'sommaVoti': 0.0}
+    };
     for (var voto in listaVoti) {
       if (!voto['commento'].contains('non fa media')) {
-        numeroVoti++;
-        sommaVoti += double.parse(voto['voto'].toString());
+        medie['globale']['numeroVoti']++;
+        medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString());
+        medie[voto['tipo']]['numeroVoti']++;
+        medie[voto['tipo']]['sommaVoti'] +=
+            double.parse(voto['voto'].toString());
       }
     }
-    var mediaVoti = (sommaVoti / numeroVoti).toStringAsFixed(2);
-    if (mediaVoti == 'NaN') {
-      mediaVoti = '0';
-    }
-    return mediaVoti;
+    medie['ScrittoOrale']['numeroVoti'] += medie['scritto']['numeroVoti'];
+    medie['ScrittoOrale']['numeroVoti'] += medie['orale']['numeroVoti'];
+    medie['ScrittoOrale']['numeroVoti'] += medie['pratico']['numeroVoti'];
+    medie['ScrittoOrale']['sommaVoti'] += medie['scritto']['sommaVoti'];
+    medie['ScrittoOrale']['sommaVoti'] += medie['orale']['sommaVoti'];
+    medie['ScrittoOrale']['sommaVoti'] += medie['pratico']['sommaVoti'];
+    medie.forEach((tipo, media) {
+      var mediaVoto =
+          (media['sommaVoti'] / media['numeroVoti']).toStringAsFixed(2);
+      if (mediaVoto == 'NaN') {
+        mediaVoto = '0';
+      }
+      risultato[tipo] = mediaVoto;
+    });
+    return risultato;
   }
 
   void initState() {

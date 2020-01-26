@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'backdropWidgets.dart';
 import 'database.dart';
 import 'api.dart';
+import 'main.dart' as mainVar;
 
 class ImpostazioniRoute extends StatefulWidget {
   @override
@@ -40,6 +41,7 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
                             child: ListBody(children: <Widget>[
                           TextField(
                             controller: intervalloNotificheController,
+                            keyboardType: TextInputType.number,
                             obscureText: false,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
@@ -134,7 +136,9 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
         print('[BackgroundFetch] stop success: $status');
       });
     }
-    Fluttertoast.showToast(msg: 'Riavvia l\'app per applicare le modifiche.');
+    mainVar.darkTheme = settings['dark'];
+    runApp(mainVar.MyApp());
+    //Fluttertoast.showToast(msg: 'Riavvia l\'app per applicare le modifiche.');
   }
 
   Future visualizzaImpostazioni() async {

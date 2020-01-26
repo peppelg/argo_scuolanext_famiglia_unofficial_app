@@ -166,18 +166,18 @@ class _OrarioRouteState extends State<OrarioRoute> {
               'Sei sicuro di voler scaricare il nuovo orario da Argo? I nomi delle materie modificate verranno persi.'),
           actions: <Widget>[
             FlatButton(
-              child: new Text('SÌ'),
+              child: new Text('No'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            FlatButton(
+              child: new Text('Sì'),
               onPressed: () async {
                 await Database.put('orario', null);
                 Navigator.of(context).pop();
                 WidgetsBinding.instance.addPostFrameCallback(
                     (_) => _refreshIndicatorKey.currentState.show());
-              },
-            ),
-            FlatButton(
-              child: new Text('NO'),
-              onPressed: () {
-                Navigator.of(context).pop();
               },
             ),
           ],
