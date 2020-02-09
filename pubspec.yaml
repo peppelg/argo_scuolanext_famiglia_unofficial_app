@@ -12,6 +12,7 @@ description: App non ufficiale per Argo ScuolaNext.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 version: 1.0.3+3
+apk_url: https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app/releases/latest/download/app-release.apk
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
