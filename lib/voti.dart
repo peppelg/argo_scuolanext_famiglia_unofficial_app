@@ -265,7 +265,8 @@ Future notificaNuoviVoti() async {
               'nuovo-voto',
               'Notifica voto',
               'Notifica nuovi voti su Argo ScuolaNext.',
-              groupKey: 'nuovo-voto');
+              groupKey: 'nuovo-voto',
+              style: AndroidNotificationStyle.BigText);
           var iOSPlatformChannelSpecifics = IOSNotificationDetails();
           var platformChannelSpecifics = NotificationDetails(
               androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);

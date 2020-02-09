@@ -11,7 +11,7 @@ class InfoRoute extends StatelessWidget {
         ),
         body: Markdown(
             data:
-                "App open-source non ufficiale per Argo ScuolaNext.\n\n[Sito dell'app](https://peppelg.space/argo-famiglia)\n[Canale Telegram degli aggiornamenti](https://t.me/scuolanext)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n[Debug API](https://app.debug)\n\nSe l'app ha qualche problema, controlla se c'è una nuova versione. Se il problema persiste apri un'issue su GitHub.\n\n---\n\tIcona creata da Prosymbols per www.flaticon.com\n\tIcone \"homework\", \"timetable\", \"calendar\" create da Freepik per www.flaticon.com.",
+                "App open-source non ufficiale per Argo ScuolaNext.\n\n[Sito dell'app](https://peppelg.space/argo-famiglia)\n[Canale Telegram degli aggiornamenti](https://t.me/scuolanext)\n[Codice sorgente](https://github.com/peppelg/argo_scuolanext_famiglia_unofficial_app)\n[Debug API](https://app.debug)\n\nApp non affilata ad Argo Software S.r.l, pertanto si declina qualsiasi conseguenza comportata dall\'uso di questa applicazione.\n\nSe l'app ha qualche problema, controlla se c'è una nuova versione. Se il problema persiste apri un'issue su GitHub.\n\n---\n\tIcona creata da Prosymbols per www.flaticon.com\n\tIcone \"homework\", \"timetable\", \"calendar\" create da Freepik per www.flaticon.com.",
             onTapLink: (href) {
               if (href == 'https://app.debug') {
                 Navigator.of(context).pushNamed('/debugApi');

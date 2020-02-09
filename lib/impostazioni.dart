@@ -85,7 +85,7 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
     widgetsImpostazioni.add(
       Card(
         child: SwitchListTile(
-          title: Text('Tema nero'),
+          title: Text('Tema scuro'),
           value: settings_dark,
           onChanged: (bool value) async {
             setState(() {
