@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:background_fetch/background_fetch.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'backdropWidgets.dart';
 import 'database.dart';
 import 'api.dart';
@@ -19,6 +20,8 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
   var settings;
   var settings_notifications = false;
   var settings_dark = false;
+  var settings_dateFilterToggle = false;
+  var settings_dateFilter = null;
   final intervalloNotificheController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -97,6 +100,40 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
         ),
       ),
     );
+    widgetsImpostazioni.add(
+      Card(
+        child: SwitchListTile(
+          title: Text('Filtra voti'),
+          value: settings_dateFilterToggle,
+          onChanged: (bool value) async {
+            if (settings_dateFilterToggle == false) {
+              //apre coso x impostare data
+              DatePicker.showDatePicker(context,
+                  showTitleActions: true,
+                  minTime: DateTime(2000),
+                  maxTime: DateTime.now(), onConfirm: (date) async {
+                setState(() {
+                  settings_dateFilter = date;
+                  settings_dateFilterToggle = value;
+                });
+                Fluttertoast.showToast(
+                    msg: 'Verranno mostrati solo i voti registrati dopo il ' +
+                        date.toString());
+                await aggiornaImpostazioni();
+              }, currentTime: settings_dateFilter, locale: LocaleType.it);
+            } else {
+              //toglie filtro
+              setState(() {
+                settings_dateFilterToggle = value;
+                settings_dateFilter = null;
+              });
+              await aggiornaImpostazioni();
+            }
+          },
+          secondary: Icon(Icons.date_range),
+        ),
+      ),
+    );
     widgetsImpostazioni.add(Card(
         child: ListTile(
             title: Text('Verifica aggiornamenti'),
@@ -126,6 +163,7 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
     settings['dark'] = settings_dark;
     settings['notifications_check_interval'] =
         int.parse(intervalloNotificheController.text);
+    settings['dateFilter'] = settings_dateFilter;
     await Database.put('settings', settings);
     if (settings['notifications'] == true) {
       BackgroundFetch.start().then((int status) {
@@ -147,18 +185,29 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
       settings = {
         'notifications': false,
         'dark': false,
-        'notifications_check_interval': 60
+        'notifications_check_interval': 60,
+        'dateFilter': null
       };
       await Database.put('settings', settings);
     }
     if (!settings.containsKey('notifications_check_interval')) {
       settings['notifications_check_interval'] = 60;
     }
+    if (!settings.containsKey('dateFilter')) {
+      settings['dateFilter'] = null;
+    }
     setState(() {
       settings_notifications = settings['notifications'];
       settings_dark = settings['dark'];
       intervalloNotificheController.text =
           settings['notifications_check_interval'].toString();
+      if (settings['dateFilter'] == null) {
+        settings_dateFilter = DateTime.now();
+        settings_dateFilterToggle = false;
+      } else {
+        settings_dateFilter = settings['dateFilter'];
+        settings_dateFilterToggle = true;
+      }
     });
   }
 

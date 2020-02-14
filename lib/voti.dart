@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
 import 'aggiornamento.dart';
@@ -84,12 +85,28 @@ class _VotiRouteState extends State<VotiRoute> {
 
   Future aggiornaVoti() async {
     var nuoviVoti = await votigiornalieri();
-    setState(() {
-      voti = nuoviVoti;
-    });
     if (nuoviVoti.isNotEmpty) {
       await Database.put('voti', nuoviVoti);
     }
+    var settings = await Database.get('settings');
+    if (settings.containsKey('dateFilter') && settings['dateFilter'] != null) {
+      nuoviVoti = filtraVoti(nuoviVoti, settings['dateFilter']);
+    }
+    setState(() {
+      voti = nuoviVoti;
+    });
+  }
+
+  filtraVoti(voti, data) {
+    Map.from(voti).forEach((nomeMateria, materia) {
+      for (var voto in List.from(materia['voti'])) {
+        var dataVoto = DateFormat('dd/MM/y').parse(voto['data']);
+        if (dataVoto.isBefore(data)) {
+          voti[nomeMateria]['voti'].remove(voto);
+        }
+      }
+    });
+    return voti;
   }
 
   schedaVoto(voto) {
