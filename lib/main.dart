@@ -78,9 +78,11 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           brightness: Brightness.light,
           buttonTheme: ButtonThemeData(
-            buttonColor: Colors.blue,
-            textTheme: ButtonTextTheme.primary,
-          )),
+              buttonColor: Colors.blue,
+              textTheme: ButtonTextTheme.accent,
+              colorScheme: Theme.of(context)
+                  .colorScheme
+                  .copyWith(secondary: Colors.white))),
       darkTheme: ThemeData(
         brightness: Brightness.dark,
       ),

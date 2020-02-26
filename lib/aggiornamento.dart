@@ -67,19 +67,20 @@ class _AggiornamentoRouteState extends State<AggiornamentoRoute> {
           Center(child: Text('\nL\'app è aggiornata :)', textScaleFactor: 2)));
     } else if (updateButton == 3) {
       if (percent != 100) {
-        updateWidgets.add(Padding(
-            padding: EdgeInsets.only(top: 30),
-            child: Align(
-                alignment: Alignment.bottomCenter,
-                child: LinearPercentIndicator(
-                  width: MediaQuery.of(context).size.width - 100,
-                  lineHeight: 20.0,
-                  animationDuration: 2500,
-                  percent: percent / 100,
-                  center: Text(percent.toStringAsFixed(0) + '%'),
-                  linearStrokeCap: LinearStrokeCap.roundAll,
-                  progressColor: Colors.green,
-                ))));
+        updateWidgets.add(Center(
+            child: Padding(
+                padding: EdgeInsets.only(top: 30),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: LinearPercentIndicator(
+                      width: MediaQuery.of(context).size.width - 100,
+                      lineHeight: 20.0,
+                      animationDuration: 2500,
+                      percent: percent / 100,
+                      center: Text(percent.toStringAsFixed(0) + '%'),
+                      linearStrokeCap: LinearStrokeCap.roundAll,
+                      progressColor: Colors.green,
+                    )))));
       } else {
         updateWidgets.add(Padding(
             padding: EdgeInsets.only(top: 30),
