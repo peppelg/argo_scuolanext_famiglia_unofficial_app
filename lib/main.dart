@@ -16,6 +16,7 @@ import 'info.dart';
 import 'debugApi.dart';
 import 'aggiornamento.dart';
 import 'impostazioni.dart';
+import 'bacheca.dart';
 
 var darkTheme = false;
 
@@ -79,7 +80,7 @@ class MyApp extends StatelessWidget {
           brightness: Brightness.light,
           buttonTheme: ButtonThemeData(
               buttonColor: Colors.blue,
-              textTheme: ButtonTextTheme.accent,
+              textTheme: ButtonTextTheme.primary,
               colorScheme: Theme.of(context)
                   .colorScheme
                   .copyWith(secondary: Colors.white))),
@@ -117,6 +118,11 @@ class MyApp extends StatelessWidget {
           case '/lezioni':
             {
               route = LezioniRoute();
+            }
+            break;
+          case '/bacheca':
+            {
+              route = BachecaRoute();
             }
             break;
           case '/oggi':

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intl/intl.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
+import 'widgets.dart';
 
 class OggiRoute extends StatefulWidget {
   @override
@@ -13,7 +15,7 @@ class OggiRoute extends StatefulWidget {
 }
 
 class _OggiRouteState extends State<OggiRoute> {
-  List listaOggi = [];
+  Map listaOggi = {};
   var giorno = formatDate(DateTime.now().toString());
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
@@ -21,18 +23,14 @@ class _OggiRouteState extends State<OggiRoute> {
   @override
   Widget build(BuildContext context) {
     var widgetsOggi = <Widget>[];
-    for (var tipo in listaOggi) {
-      widgetsOggi.add(Padding(
-          padding: EdgeInsets.only(left: 5, top: 5),
-          child: Card(
-              child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            ListTile(
-              title: Text(tipo['titolo'] + ' - ' + tipo['tipo']),
-              subtitle: Text(tipo['descrizione']),
-              //leading: Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[Icon(Icons.warning)])
-            )
-          ]))));
-    }
+    listaOggi.forEach((k, elemento) {
+      if (elemento.isNotEmpty) {
+        widgetsOggi.add(ExpansionTile(
+            leading: getIcon(k),
+            title: Text(k),
+            children: widgetOggiDynamic(k, elemento, context)));
+      }
+    });
     return BackdropScaffold(
         title: Text('Cosa è successo oggi'),
         backLayer: getBackdrop(context),
@@ -65,6 +63,27 @@ class _OggiRouteState extends State<OggiRoute> {
     setState(() {
       listaOggi = nuovoOggi;
     });
+  }
+
+  getIcon(type) {
+    if (type == 'Voti') {
+      return Icon(FontAwesomeIcons.pen, size: 22.0);
+    }
+    if (type == 'Compiti') {
+      return Icon(FontAwesomeIcons.book, size: 22.0);
+    }
+    if (type == 'Argomenti') {
+      return Icon(FontAwesomeIcons.chalkboardTeacher, size: 22.0);
+    }
+    if (type == 'Note') {
+      return Icon(FontAwesomeIcons.frown, size: 22.0);
+    }
+    if (type == 'Assenze') {
+      return Icon(FontAwesomeIcons.userTimes, size: 22.0);
+    }
+    if (type == 'Bacheca') {
+      return Icon(FontAwesomeIcons.fileAlt, size: 22.0);
+    }
   }
 
   void initState() {

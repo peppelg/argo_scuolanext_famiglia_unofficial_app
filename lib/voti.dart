@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
-import 'package:percent_indicator/percent_indicator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
 import 'aggiornamento.dart';
 import 'database.dart';
+import 'widgets.dart';
 
 class VotiRoute extends StatefulWidget {
   @override
@@ -55,7 +55,7 @@ class _VotiRouteState extends State<VotiRoute> {
         Divider()
       ];
       for (var voto in materia['voti']) {
-        widgetsVoti.add(schedaVoto(voto));
+        widgetsVoti.add(widgetVoto(voto, context));
       }
       widgetsMaterie.add(ExpansionTile(
           leading: cerchioVoto(media['globale']),
@@ -109,78 +109,6 @@ class _VotiRouteState extends State<VotiRoute> {
     return voti;
   }
 
-  schedaVoto(voto) {
-    return Padding(
-        padding: EdgeInsets.only(left: 5, top: 5),
-        child: ListTile(
-            leading: cerchioVoto(voto['voto'].toString()),
-            title: Text(voto['tipo']),
-            subtitle: Text(voto['data']),
-            trailing: IconButton(
-              icon: Icon(Icons.info_outline),
-              tooltip: 'Visualizza altre informazioni',
-              onPressed: () {
-                return showDialog<void>(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Informazioni sul voto'),
-                      content: SingleChildScrollView(
-                        child: ListBody(
-                          children: <Widget>[
-                            Text('Voto: ' + voto['voto'].toString()),
-                            Text('Data: ' + voto['data']),
-                            Text('Descrizione: ' +
-                                (['', null, false, 0]
-                                        .contains(voto['descrizione'])
-                                    ? '<nessuna descrizione>'
-                                    : voto['descrizione']) +
-                                ' ' +
-                                voto['commento'])
-                          ],
-                        ),
-                      ),
-                      actions: <Widget>[
-                        FlatButton(
-                          child: Text('Chiudi'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
-            )));
-  }
-
-  cerchioVoto(voto, {radius = 40.0}) {
-    voto = double.parse(voto);
-    return CircularPercentIndicator(
-      radius: radius,
-      lineWidth: 5.0,
-      percent: voto / 10,
-      center: Text(voto.toString()),
-      progressColor: coloreVoto(voto.toString()),
-    );
-  }
-
-  coloreVoto(voto) {
-    voto = double.parse(voto);
-    if (voto <= 0) {
-      return Colors.white;
-    } else if (voto >= 6) {
-      return Colors.green;
-    } else if (voto >= 5 && voto < 6) {
-      //5
-      return Colors.orange;
-    } else {
-      return Colors.red;
-    }
-  }
-
   mediaVoti(listaVoti) {
     //magno spaghetti
     var risultato = {};
@@ -192,7 +120,8 @@ class _VotiRouteState extends State<VotiRoute> {
       'ScrittoOrale': {'numeroVoti': 0, 'sommaVoti': 0.0}
     };
     for (var voto in listaVoti) {
-      if (!voto['commento'].contains('non fa media')) {
+      if (!voto['commento'].contains('non fa media') &&
+          double.parse(voto['voto'].toString()) > 0) {
         medie['globale']['numeroVoti']++;
         medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString());
         if (medie.containsKey(voto['tipo'])) {

@@ -9,141 +9,70 @@ getBackdrop(context) {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/voti');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.pen,
-                                color: Colors.white, size: 18.0)),
-                        Text('I miei voti',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/orario');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.clock,
-                                color: Colors.white, size: 18.0)),
-                        Text('Orario',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/assenze');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.userTimes,
-                                color: Colors.white, size: 18.0)),
-                        Text('Assenze',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/note');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.frown,
-                                color: Colors.white, size: 18.0)),
-                        Text('Note',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/compiti');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.book,
-                                color: Colors.white, size: 18.0)),
-                        Text('Compiti assegnati',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/lezioni');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.chalkboardTeacher,
-                                color: Colors.white, size: 18.0)),
-                        Text('Argomenti lezione',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/oggi');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.calendarDay,
-                                color: Colors.white, size: 18.0)),
-                        Text('Cosa è successo oggi',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                )),
-                Expanded(
-                    child: FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pushReplacementNamed('/impostazioni');
-                  },
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Padding(
-                            padding: EdgeInsets.only(right: 10.0),
-                            child: Icon(FontAwesomeIcons.cog,
-                                color: Colors.white, size: 18.0)),
-                        Text('Impostazioni',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 18.0))
-                      ]),
-                ))
+                widgetMenuBottone(
+                    'I miei voti',
+                    '/voti',
+                    Icon(FontAwesomeIcons.pen, color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Orario',
+                    '/orario',
+                    Icon(FontAwesomeIcons.clock,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Assenze',
+                    '/assenze',
+                    Icon(FontAwesomeIcons.userTimes,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Note',
+                    '/note',
+                    Icon(FontAwesomeIcons.frown,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Compiti assegnati',
+                    '/compiti',
+                    Icon(FontAwesomeIcons.book,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Argomenti lezione',
+                    '/lezioni',
+                    Icon(FontAwesomeIcons.chalkboardTeacher,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Bacheca',
+                    '/bacheca',
+                    Icon(FontAwesomeIcons.fileAlt,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Cosa è successo oggi',
+                    '/oggi',
+                    Icon(FontAwesomeIcons.calendarDay,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Impostazioni',
+                    '/impostazioni',
+                    Icon(FontAwesomeIcons.cog, color: Colors.white, size: 18.0),
+                    context)
               ])));
+}
+
+widgetMenuBottone(testo, route, icon, context) {
+  return Expanded(
+      child: FlatButton(
+    onPressed: () {
+      Navigator.of(context).pushReplacementNamed(route);
+    },
+    child: Row(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
+      Padding(padding: EdgeInsets.only(right: 10.0), child: icon),
+      Text(testo, style: TextStyle(color: Colors.white, fontSize: 18.0))
+    ]),
+  ));
 }

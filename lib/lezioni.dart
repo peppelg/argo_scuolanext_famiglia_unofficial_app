@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
+import 'widgets.dart';
 
 class LezioniRoute extends StatefulWidget {
   @override
@@ -48,12 +49,8 @@ class _LezioniRouteState extends State<LezioniRoute> {
   buildArgomentiWidget(argomenti) {
     var widgetArgomenti = <Widget>[];
     for (var argomento in argomenti) {
-      widgetArgomenti.add(Card(
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        ListTile(
-            title: Text(argomento['data']),
-            subtitle: Text(argomento['argomento']))
-      ])));
+      widgetArgomenti
+          .add(widgetCard(argomento['data'], argomento['argomento']));
     }
     return widgetArgomenti;
   }

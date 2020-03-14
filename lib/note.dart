@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
+import 'widgets.dart';
 
 class NoteRoute extends StatefulWidget {
   @override
@@ -20,16 +21,7 @@ class _NoteRouteState extends State<NoteRoute> {
     var widgetsNote = <Widget>[];
     for (var nota in listaNote) {
       widgetsNote.add(Padding(
-          padding: EdgeInsets.only(left: 5, top: 5),
-          child: Card(
-              child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-            ListTile(
-                title: Text(nota['data'] + ' ' + nota['prof']),
-                subtitle: Text(nota['nota']),
-                leading: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[Icon(Icons.warning)]))
-          ]))));
+          padding: EdgeInsets.only(left: 5, top: 5), child: widgetNota(nota)));
     }
     return BackdropScaffold(
         title: Text('Note'),

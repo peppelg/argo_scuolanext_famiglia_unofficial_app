@@ -4,40 +4,40 @@ import 'backdropWidgets.dart';
 import 'api.dart';
 import 'widgets.dart';
 
-class AssenzeRoute extends StatefulWidget {
+class BachecaRoute extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return _AssenzeRouteState();
+    return _BachecaRouteState();
   }
 }
 
-class _AssenzeRouteState extends State<AssenzeRoute> {
-  List listaAssenze = [];
+class _BachecaRouteState extends State<BachecaRoute> {
+  List listaBacheca = [];
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
   @override
   Widget build(BuildContext context) {
-    var widgetsAssenze = <Widget>[];
-    for (var assenza in listaAssenze) {
-      widgetsAssenze.add(Padding(
+    var widgetsBacheca = <Widget>[];
+    for (var elemento in listaBacheca) {
+      widgetsBacheca.add(Padding(
           padding: EdgeInsets.only(left: 5, top: 5),
-          child: widgetAssenza(assenza)));
+          child: widgetBacheca(elemento)));
     }
     return BackdropScaffold(
-        title: Text('Assenze'),
+        title: Text('Bacheca'),
         backLayer: getBackdrop(context),
         frontLayer: RefreshIndicator(
             key: _refreshIndicatorKey,
-            onRefresh: aggiornaAssenze,
+            onRefresh: aggiornaBacheca,
             child: ListView(
-                children: new List.from(<Widget>[])..addAll(widgetsAssenze))));
+                children: new List.from(<Widget>[])..addAll(widgetsBacheca))));
   }
 
-  Future aggiornaAssenze() async {
-    var nuoveAssenze = await assenze();
+  Future aggiornaBacheca() async {
+    var nuovaBacheca = await bacheca();
     setState(() {
-      listaAssenze = nuoveAssenze;
+      listaBacheca = nuovaBacheca;
     });
   }
 

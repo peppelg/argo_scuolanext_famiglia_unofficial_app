@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:backdrop/backdrop.dart';
 import 'backdropWidgets.dart';
 import 'api.dart';
+import 'widgets.dart';
 
 class CompitiRoute extends StatefulWidget {
   @override
@@ -48,11 +49,7 @@ class _CompitiRouteState extends State<CompitiRoute> {
   buildCompitiWidget(compiti) {
     var widgetCompiti = <Widget>[];
     for (var compito in compiti) {
-      widgetCompiti.add(Card(
-          child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
-        ListTile(
-            title: Text(compito['data']), subtitle: Text(compito['compito']))
-      ])));
+      widgetCompiti.add(widgetCard(compito['data'], compito['compito']));
     }
     return widgetCompiti;
   }

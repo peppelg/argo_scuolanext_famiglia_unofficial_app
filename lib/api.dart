@@ -133,9 +133,11 @@ Future login(school, username, password) async {
   }
 }
 
-Future votigiornalieri() async {
-  var response = await argoRequest(fullHeaders, 'votigiornalieri',
-      {'page': '1', 'start': '0', 'limit': '25'});
+Future votigiornalieri({var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'votigiornalieri',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return {};
@@ -169,9 +171,11 @@ Future votigiornalieri() async {
   return materieVoti;
 }
 
-Future note() async {
-  var response = await argoRequest(fullHeaders, 'notedisciplinari',
-      {'page': '1', 'start': '0', 'limit': '25'});
+Future note({var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'notedisciplinari',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return [];
@@ -187,9 +191,11 @@ Future note() async {
   return listaNote;
 }
 
-Future assenze() async {
-  var response = await argoRequest(
-      fullHeaders, 'assenze', {'page': '1', 'start': '0', 'limit': '25'});
+Future assenze({var response}) async {
+  if (response == null) {
+    response = await argoRequest(
+        fullHeaders, 'assenze', {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return [];
@@ -214,11 +220,13 @@ Future assenze() async {
     listaAssenze.add({
       'assenza': testoAssenza,
       'prof': 'Registrata da: ' +
-              assenza['registrataDa'].replaceAll('(', '').replaceAll(')', '') +
-              (assenza.containsKey('giustificataDa')
-      ? '\nGiustificata da: ' +
-          assenza['giustificataDa'].replaceAll('(', '').replaceAll(')', '')
-      : ''),
+          assenza['registrataDa'].replaceAll('(', '').replaceAll(')', '') +
+          (assenza.containsKey('giustificataDa')
+              ? '\nGiustificata da: ' +
+                  assenza['giustificataDa']
+                      .replaceAll('(', '')
+                      .replaceAll(')', '')
+              : ''),
       'giustificata': assenza.containsKey('giustificataDa')
           ? true
           : !assenza['flgDaGiustificare']
@@ -227,9 +235,11 @@ Future assenze() async {
   return listaAssenze;
 }
 
-Future compiti() async {
-  var response = await argoRequest(
-      fullHeaders, 'compiti', {'page': '1', 'start': '0', 'limit': '25'});
+Future compiti({var response}) async {
+  if (response == null) {
+    response = await argoRequest(
+        fullHeaders, 'compiti', {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return {};
@@ -248,9 +258,11 @@ Future compiti() async {
   return listaCompiti;
 }
 
-Future argomenti() async {
-  var response = await argoRequest(
-      fullHeaders, 'argomenti', {'page': '1', 'start': '0', 'limit': '25'});
+Future argomenti({var response}) async {
+  if (response == null) {
+    response = await argoRequest(
+        fullHeaders, 'argomenti', {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return {};
@@ -270,9 +282,11 @@ Future argomenti() async {
   return listaArgomenti;
 }
 
-Future orario() async {
-  var response = await argoRequest(
-      fullHeaders, 'orario', {'page': '1', 'start': '0', 'limit': '25'});
+Future orario({var response}) async {
+  if (response == null) {
+    response = await argoRequest(
+        fullHeaders, 'orario', {'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return {};
@@ -296,59 +310,112 @@ Future orario() async {
   return tabellaOrario;
 }
 
-Future oggi(data) async {
+Future oggi(data, {var response}) async {
   data = DateFormat('yyyy-MM-dd')
       .format(DateFormat('dd/MM/y').parse(data))
       .toString();
-  var response = await argoRequest(fullHeaders, 'oggi',
-      {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'oggi',
+        {'datGiorno': data, 'page': '1', 'start': '0', 'limit': '25'});
+  }
   if (response.containsKey('error')) {
     Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
     return [];
   }
-  var listaOggi = [];
+  var listaOggi = {
+    'Voti': [],
+    'Compiti': [],
+    'Argomenti': [],
+    'Note': [],
+    'Assenze': [],
+    'Bacheca': []
+  };
   for (var tipo in response['dati']) {
+    if (tipo['tipo'] == 'VOT') {
+      //voto
+      var voti = await votigiornalieri(response: {
+        'dati': [tipo['dati']]
+      });
+      voti.forEach((k, v) {
+        for (var voto in v['voti']) {
+          listaOggi['Voti'].add({'materia': k, 'elemento': voto});
+        }
+      });
+    }
     if (tipo['tipo'] == 'COM') {
-      //compito assegnato
-      listaOggi.add({
-        'tipo': 'compito',
-        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
-        'descrizione': tipo['dati']['desCompiti']
+      //compiti assegnati
+      var elementi = await compiti(response: {
+        'dati': [tipo['dati']]
+      });
+      elementi.forEach((k, v) {
+        for (var elemento in v) {
+          listaOggi['Compiti'].add({'materia': k, 'elemento': elemento});
+        }
       });
     }
     if (tipo['tipo'] == 'ARG') {
-      //argomento
-      listaOggi.add({
-        'tipo': 'argomento',
-        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
-        'descrizione': tipo['dati']['desArgomento']
+      //argomenti lezione
+      var elementi = await argomenti(response: {
+        'dati': [tipo['dati']]
       });
-    }
-    if (tipo['tipo'] == 'VOT') {
-      //voto
-      listaOggi.add({
-        'tipo': 'voto',
-        'titolo': tipo['dati']['desMateria'] + ' ' + tipo['dati']['docente'],
-        'voto': tipo['dati']['decValore'].toString(),
-        'descrizione': 'Voto: ' + tipo['dati']['decValore'].toString()
+      elementi.forEach((k, v) {
+        for (var elemento in v) {
+          listaOggi['Argomenti'].add({'materia': k, 'elemento': elemento});
+        }
       });
     }
     if (tipo['tipo'] == 'NOT') {
-      //nota
-      listaOggi.add({
-        'tipo': 'nota',
-        'titolo': tipo['dati']['docente'],
-        'descrizione': tipo['dati']['desNota']
+      //note
+      var elementi = await note(response: {
+        'dati': [tipo['dati']]
       });
+      for (var elemento in elementi) {
+        listaOggi['Note'].add({'elemento': elemento});
+      }
     }
     if (tipo['tipo'] == 'ASS') {
-      //assenza
-      listaOggi.add({
-        'tipo': 'assenza',
-        'titolo': tipo['dati']['registrataDa'],
-        'descrizione': 'Assenza.'
+      //assenze
+      var elementi = await assenze(response: {
+        'dati': [tipo['dati']]
       });
+      for (var elemento in elementi) {
+        listaOggi['Assenze'].add({'elemento': elemento});
+      }
+    }
+    if (tipo['tipo'] == 'BAC') {
+      //assenze
+      var elementi = await bacheca(response: {
+        'dati': [tipo['dati']]
+      });
+      for (var elemento in elementi) {
+        listaOggi['Bacheca'].add({'elemento': elemento});
+      }
     }
   }
   return listaOggi;
+}
+
+Future bacheca({response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'bachecanuova',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  var listaBacheca = [];
+  for (var elemento in response['dati']) {
+    listaBacheca.add(bacheca_parse(elemento));
+  }
+  return listaBacheca;
+}
+
+bacheca_parse(elemento) {
+  return {
+    'oggetto': elemento['desOggetto'],
+    'messaggio': elemento['desMessaggio'],
+    'link': elemento['desUrl'],
+    'data': formatDate(elemento['datGiorno'])
+  };
 }
