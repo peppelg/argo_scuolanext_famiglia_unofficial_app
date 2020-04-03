@@ -207,17 +207,18 @@ Future notificaNuoviVoti() async {
       //votiAttuali = ['6.0 di cosita (Prof. testings) del 20/09/2019'];
       for (var voto in nuoviVoti) {
         if (!votiAttuali.contains(voto)) {
+          var testoNotifica = 'Hai preso un ' + voto;
           var androidPlatformChannelSpecifics = AndroidNotificationDetails(
               'nuovo-voto',
               'Notifica voto',
               'Notifica nuovi voti su Argo ScuolaNext.',
-              groupKey: 'nuovo-voto',
-              style: AndroidNotificationStyle.BigText);
+              groupKey: 'com.peppelg.argo_famiglia.NOTIFICHEVOTO',
+              styleInformation: BigTextStyleInformation(testoNotifica));
           var iOSPlatformChannelSpecifics = IOSNotificationDetails();
           var platformChannelSpecifics = NotificationDetails(
               androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
           flutterLocalNotificationsPlugin.show(nuoviVoti.indexOf(voto),
-              'Nuovo voto', 'Hai preso un ' + voto, platformChannelSpecifics,
+              'Nuovo voto', testoNotifica, platformChannelSpecifics,
               payload: voto);
         }
       }

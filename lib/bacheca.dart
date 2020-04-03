@@ -22,7 +22,7 @@ class _BachecaRouteState extends State<BachecaRoute> {
     for (var elemento in listaBacheca) {
       widgetsBacheca.add(Padding(
           padding: EdgeInsets.only(left: 5, top: 5),
-          child: widgetBacheca(elemento)));
+          child: widgetBacheca(elemento, refresh: aggiornaBacheca)));
     }
     return BackdropScaffold(
         title: Text('Bacheca'),

@@ -28,7 +28,7 @@ class _OggiRouteState extends State<OggiRoute> {
         widgetsOggi.add(ExpansionTile(
             leading: getIcon(k),
             title: Text(k),
-            children: widgetOggiDynamic(k, elemento, context)));
+            children: widgetOggiDynamic(k, elemento, context, refresh: aggiornaOggi)));
       }
     });
     return BackdropScaffold(

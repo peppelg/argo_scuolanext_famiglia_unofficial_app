@@ -78,12 +78,18 @@ bool isNumeric(String str) {
   return double.tryParse(str) != null;
 }
 
-Future argoRequest(headers, request, params) async {
+Future argoRequest(headers, request, params, {var postParams}) async {
   try {
     params['_dc'] = new DateTime.now().millisecondsSinceEpoch.toString();
-    Response response = await Dio().get(endpoint + '/' + request,
-        queryParameters: params, options: Options(headers: headers));
-    return response.data;
+    if (postParams == null) {
+      Response response = await Dio().get(endpoint + '/' + request,
+          queryParameters: params, options: Options(headers: headers));
+      return response.data;
+    } else {
+      Response response = await Dio().post(endpoint + '/' + request,
+          data: postParams, options: Options(headers: headers));
+      return response.data;
+    }
   } catch (e) {
     return {'error': e.toString()};
   }
@@ -395,7 +401,7 @@ Future oggi(data, {var response}) async {
   return listaOggi;
 }
 
-Future bacheca({response}) async {
+Future bacheca({var response}) async {
   if (response == null) {
     response = await argoRequest(fullHeaders, 'bachecanuova',
         {'page': '1', 'start': '0', 'limit': '25'});
@@ -416,6 +422,35 @@ bacheca_parse(elemento) {
     'oggetto': elemento['desOggetto'],
     'messaggio': elemento['desMessaggio'],
     'link': elemento['desUrl'],
-    'data': formatDate(elemento['datGiorno'])
+    'data': formatDate(elemento['datGiorno']),
+    'id': elemento['prgMessaggio'],
+    'presa_visione': elemento['presaVisione'],
+    'presa_adesione': elemento['adesione'],
+    'richiedi_presa_visione': elemento['richiediPv'],
+    'richiedi_presa_adesione': elemento['richiediAd'],
+    'allegati': elemento['allegati']
   };
+}
+
+Future confermaPresaVisione(presaVisione, id, {var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'presavisionebachecanuova', {},
+        postParams: {'presaVisione': presaVisione, 'prgMessaggio': id});
+  }
+  if (response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  return response;
+}
+
+getUrl(prgAllegato, prgMessaggio) {
+  return endpoint +
+      '/messaggiobachecanuova?id=' +
+      fullHeaders['x-cod-min'].toUpperCase().padLeft(10, 'F') +
+      'II'.padLeft(5, 'E') +
+      prgAllegato.toString().padLeft(5, '0') +
+      prgMessaggio.toString().padLeft(10, '0') +
+      fullHeaders['x-auth-token'].replaceAll('-', '') +
+      fullHeaders['x-key-app'];
 }

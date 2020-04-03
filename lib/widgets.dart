@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'api.dart';
 
 widgetAssenza(assenza) {
   return Card(
@@ -112,8 +114,9 @@ widgetVoto(voto, context) {
           )));
 }
 
-widgetBacheca(elemento) {
+widgetBacheca(elemento, {var refresh}) {
   var subtitle = <Widget>[Text(elemento['messaggio'])];
+  var buttons = <Widget>[];
   if (elemento['link'] != null) {
     subtitle.add(FlatButton(
         onPressed: () {
@@ -121,6 +124,53 @@ widgetBacheca(elemento) {
         },
         child: Text(elemento['link'])));
   }
+  for (var allegato in elemento['allegati']) {
+    //desFile: testo file, prgMessaggio: id messaggio, prgAllegato: id allegato
+    subtitle.add(FlatButton(
+        onPressed: () async {
+          launch(getUrl(allegato['prgAllegato'], allegato['prgMessaggio']));
+        },
+        child: Text(allegato['desFile'])));
+  }
+  if (elemento['richiedi_presa_visione']) {
+    if (elemento['presa_visione']) {
+      buttons.add(Expanded(
+          child: FlatButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () async {
+                Fluttertoast.showToast(msg: 'Hai già preso visione!');
+              },
+              child: Text('Presa visione confermata'))));
+    } else {
+      buttons.add(Expanded(
+          child: FlatButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () async {
+                await presaVisioneBacheca(true, elemento['id'], refresh);
+              },
+              child: Text('Conferma presa visione'))));
+    }
+  }
+  if (elemento['richiedi_presa_adesione']) {
+    if (elemento['presa_adesione']) {
+      buttons.add(Expanded(
+          child: FlatButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () async {
+                await presaVisioneBacheca(false, elemento['id'], refresh);
+              },
+              child: Text('Rimuovi presa adesione'))));
+    } else {
+      buttons.add(Expanded(
+          child: FlatButton(
+              materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              onPressed: () async {
+                await presaVisioneBacheca(false, elemento['id'], refresh);
+              },
+              child: Text('Conferma presa adesione'))));
+    }
+  }
+  subtitle.add(Row(children: buttons));
   return Card(
       child: Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
     ListTile(
@@ -130,7 +180,13 @@ widgetBacheca(elemento) {
   ]));
 }
 
-widgetOggiDynamic(tipo, elementi, context) {
+Future presaVisioneBacheca(presaVisione, id, refresh) async {
+  var conferma = await confermaPresaVisione(presaVisione, id);
+  Fluttertoast.showToast(msg: conferma['message']);
+  await refresh();
+}
+
+widgetOggiDynamic(tipo, elementi, context, {var refresh}) {
   var widgets = <Widget>[];
   for (var elemento in elementi) {
     if (tipo == 'Voti') {
@@ -158,7 +214,7 @@ widgetOggiDynamic(tipo, elementi, context) {
     }
     if (tipo == 'Bacheca') {
       //WIDGET BACHECA
-      widgets.add(widgetBacheca(elemento['elemento']));
+      widgets.add(widgetBacheca(elemento['elemento'], refresh: refresh));
     }
   }
   return widgets;
