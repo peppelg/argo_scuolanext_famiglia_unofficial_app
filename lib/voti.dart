@@ -122,12 +122,18 @@ class _VotiRouteState extends State<VotiRoute> {
     for (var voto in listaVoti) {
       if (!voto['commento'].contains('non fa media') &&
           double.parse(voto['voto'].toString()) > 0) {
-        medie['globale']['numeroVoti']++;
-        medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString());
+        double valore = 100;
+        if (voto['commento'].contains('incide al')) {
+          RegExp regex = new RegExp(r"\d+((\.|,)\d{1,2})?");
+          valore = double.parse(regex.allMatches(voto['commento']).first[0].replaceAll(',', '.'));
+        }
+        print("Valore: " + valore.toString());
+        medie['globale']['numeroVoti'] += valore;
+        medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString()) * valore;
         if (medie.containsKey(voto['tipo'])) {
-          medie[voto['tipo']]['numeroVoti']++;
+          medie[voto['tipo']]['numeroVoti'] += valore;
           medie[voto['tipo']]['sommaVoti'] +=
-              double.parse(voto['voto'].toString());
+              double.parse(voto['voto'].toString()) * valore;
         }
       }
     }
