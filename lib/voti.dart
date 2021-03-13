@@ -127,7 +127,6 @@ class _VotiRouteState extends State<VotiRoute> {
           RegExp regex = new RegExp(r"(\d+)(?!.*\d)");
           valore = double.parse(regex.allMatches(voto['commento']).first[0].replaceAll(',', '.'));
         }
-        print("Valore: " + valore.toString());
         medie['globale']['numeroVoti'] += valore;
         medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString()) * valore;
         if (medie.containsKey(voto['tipo'])) {

@@ -76,7 +76,7 @@ widgetVoto(voto, context) {
           subtitle: ListBody(
             children: [
               Text(voto['data']),
-              Text('validitá: ' + (voto['commento'].contains('incide al') ? new RegExp(r"\d+((\.|,)\d{1,2})?").allMatches(voto['commento']).first[0] + "%" : "100%"))
+              Text('validità: ' + (voto['commento'].contains('incide al') ? new RegExp(r"(\d+)(?!.*\d)").allMatches(voto['commento']).first[0] + "%" : "100%"))
             ]
           ),
           trailing: IconButton(
