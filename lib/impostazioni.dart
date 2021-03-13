@@ -202,7 +202,7 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
       intervalloNotificheController.text =
           settings['notifications_check_interval'].toString();
       if (settings['dateFilter'] == null) {
-        settings_dateFilter = DateTime.now();
+        settings_dateFilter = settings['dateFilter'];
         settings_dateFilterToggle = false;
       } else {
         settings_dateFilter = settings['dateFilter'];

@@ -73,7 +73,12 @@ widgetVoto(voto, context) {
       child: ListTile(
           leading: cerchioVoto(voto['voto'].toString()),
           title: Text(voto['tipo']),
-          subtitle: Text(voto['data']),
+          subtitle: ListBody(
+            children: [
+              Text(voto['data']),
+              Text('validità: ' + (voto['commento'].contains('incide al') ? new RegExp(r"(\d+)(?!.*\d)").allMatches(voto['commento']).first[0] + "%" : "100%"))
+            ]
+          ),
           trailing: IconButton(
             icon: Icon(Icons.info_outline),
             tooltip: 'Visualizza altre informazioni',
