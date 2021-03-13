@@ -124,7 +124,7 @@ class _VotiRouteState extends State<VotiRoute> {
           double.parse(voto['voto'].toString()) > 0) {
         double valore = 100;
         if (voto['commento'].contains('incide al')) {
-          RegExp regex = new RegExp(r"\d+((\.|,)\d{1,2})?");
+          RegExp regex = new RegExp(r"(\d+)(?!.*\d)");
           valore = double.parse(regex.allMatches(voto['commento']).first[0].replaceAll(',', '.'));
         }
         print("Valore: " + valore.toString());
