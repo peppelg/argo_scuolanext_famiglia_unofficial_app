@@ -51,6 +51,12 @@ getBackdrop(context) {
                         color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
+                    'Scrutinio',
+                    '/scrutinio',
+                    Icon(FontAwesomeIcons.thumbtack,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
                     'Cosa è successo oggi',
                     '/oggi',
                     Icon(FontAwesomeIcons.calendarDay,
