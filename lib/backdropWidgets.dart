@@ -51,6 +51,11 @@ getBackdrop(context) {
                         color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
+                    'Dati anagrafici',
+                    '/datianagrafici',
+                    Icon(FontAwesomeIcons.info, color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
                     'Cosa è successo oggi',
                     '/oggi',
                     Icon(FontAwesomeIcons.calendarDay,

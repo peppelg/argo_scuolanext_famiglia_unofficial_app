@@ -131,6 +131,7 @@ Future login(school, username, password) async {
             fullHeaders['x-prg-scheda'],
             fullHeaders['x-prg-alunno'],
             fullHeaders['x-prg-scuola']);
+        await Database.put('dati-anagrafici', info[0]['alunno']);
         return 'OK';
       } else {
         return 'Errore sconosciuto.';
