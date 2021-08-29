@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:background_fetch/background_fetch.dart';
+import 'datianagrafici.dart';
 import 'redirectRoute.dart';
 import 'database.dart';
 import 'login.dart';
@@ -135,6 +136,11 @@ class MyApp extends StatelessWidget {
           case '/orario':
             {
               route = OrarioRoute();
+            }
+            break;
+          case '/datianagrafici':
+            {
+              route = DatiAnagraficiRoute();
             }
             break;
           case '/scrutinio':
