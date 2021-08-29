@@ -418,6 +418,49 @@ Future bacheca({var response}) async {
   return listaBacheca;
 }
 
+Future periodiscrutinio({var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'periodiclasse',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
+
+  if (!(response is List) && response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+
+  return response['dati'];
+}
+
+Future votiscruitinio({var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'votiscrutinio',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
+  // Si controlla che response non sia una lista, quindi che abbia il metodo .containsKey
+  // (la richiesta votiscrutinio non ritorna un oggetto con un campo 'dati', bensì una lista)
+  if (!(response is List) && response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return {};
+  }
+  var periodi = await periodiscrutinio();
+
+  Map scrutinio = {};
+  for (var periodo in periodi)
+    scrutinio[periodo['prgPeriodo']] = {
+      'titolo': periodo['desPeriodo'],
+      'esito': periodo['esito'],
+      'dati': []
+    };
+  
+  for (var elemento in response) {
+    int periodo = elemento['prgPeriodo'];
+    scrutinio[periodo]['dati'].add(elemento);
+  }
+
+  return scrutinio;
+}
+
 bacheca_parse(elemento) {
   return {
     'oggetto': elemento['desOggetto'],

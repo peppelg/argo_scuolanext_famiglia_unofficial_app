@@ -54,6 +54,13 @@ getBackdrop(context) {
                     'Dati anagrafici',
                     '/datianagrafici',
                     Icon(FontAwesomeIcons.info, color: Colors.white, size: 18.0),
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Scrutinio',
+                    '/scrutinio',
+                    Icon(FontAwesomeIcons.thumbtack,
+                        color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
                     'Cosa è successo oggi',

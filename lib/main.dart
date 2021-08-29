@@ -18,6 +18,7 @@ import 'debugApi.dart';
 import 'aggiornamento.dart';
 import 'impostazioni.dart';
 import 'bacheca.dart';
+import 'scrutinio.dart';
 
 var darkTheme = false;
 
@@ -140,6 +141,11 @@ class MyApp extends StatelessWidget {
           case '/datianagrafici':
             {
               route = DatiAnagraficiRoute();
+            }
+            break;
+          case '/scrutinio':
+            {
+              route = ScrutinioRoute();
             }
             break;
           case '/info':
