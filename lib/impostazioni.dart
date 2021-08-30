@@ -148,6 +148,14 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
             onTap: () {
               Navigator.of(context).pushNamed('/info');
             })));
+    widgetsImpostazioni.add(Card(
+        child: ListTile(
+            title: Text('Logout'),
+            leading: Icon(Icons.exit_to_app),
+            onTap: () async {
+              await Database.put('auth_token', null); // forza il login
+              Navigator.of(context).pushReplacementNamed('/login');
+            })));
     return BackdropScaffold(
         title: Text('Impostazioni'),
         backLayer: getBackdrop(context),
