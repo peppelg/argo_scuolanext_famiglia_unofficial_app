@@ -19,6 +19,7 @@ import 'aggiornamento.dart';
 import 'impostazioni.dart';
 import 'bacheca.dart';
 import 'scrutinio.dart';
+import 'professori.dart';
 
 var darkTheme = false;
 
@@ -146,6 +147,11 @@ class MyApp extends StatelessWidget {
           case '/scrutinio':
             {
               route = ScrutinioRoute();
+            }
+            break;
+          case '/professori':
+            {
+              route = ProfessoriRoute();
             }
             break;
           case '/info':

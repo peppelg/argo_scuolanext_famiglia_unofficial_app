@@ -64,6 +64,12 @@ getBackdrop(context) {
                         color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
+                    'Lista Professori',
+                    '/professori',
+                    Icon(FontAwesomeIcons.users,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
                     'Cosa è successo oggi',
                     '/oggi',
                     Icon(FontAwesomeIcons.calendarDay,
