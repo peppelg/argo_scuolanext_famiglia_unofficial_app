@@ -4,6 +4,7 @@ import 'package:background_fetch/background_fetch.dart';
 import 'package:backdrop/backdrop.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:restart_app/restart_app.dart';
 import 'backdropWidgets.dart';
 import 'database.dart';
 import 'api.dart';
@@ -147,6 +148,37 @@ class _ImpostazioniRouteState extends State<ImpostazioniRoute> {
             leading: Icon(Icons.info_outline),
             onTap: () {
               Navigator.of(context).pushNamed('/info');
+            })));
+    widgetsImpostazioni.add(Card(
+        child: ListTile(
+            title: Text('Logout'),
+            leading: Icon(Icons.exit_to_app),
+            onTap: () async {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text('Logout'),
+                    content: Text(
+                        'Vuoi resettare tutti i dati dell\'applicazione?'),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: new Text('No'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: new Text('Sì'),
+                        onPressed: () async {
+                          await Database.resetDatabase();
+                          Restart.restartApp();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             })));
     return BackdropScaffold(
         title: Text('Impostazioni'),

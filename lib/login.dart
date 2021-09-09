@@ -136,7 +136,7 @@ class _LoginRouteState extends State<LoginRoute> {
                       passwordField.text);
                 },
                 child: Text(
-                  "LOGIN",
+                  'LOGIN',
                 ),
               ))
         ]));

@@ -12,7 +12,8 @@ getBackdrop(context) {
                 widgetMenuBottone(
                     'I miei voti',
                     '/voti',
-                    Icon(FontAwesomeIcons.pen, color: Colors.white, size: 18.0),
+                    Icon(FontAwesomeIcons.pen,
+                         color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
                     'Orario',
@@ -51,6 +52,18 @@ getBackdrop(context) {
                         color: Colors.white, size: 18.0),
                     context),
                 widgetMenuBottone(
+                    'Dati anagrafici',
+                    '/datianagrafici',
+                    Icon(FontAwesomeIcons.info,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
+                    'Scrutinio',
+                    '/scrutinio',
+                    Icon(FontAwesomeIcons.thumbtack,
+                        color: Colors.white, size: 18.0),
+                    context),
+                widgetMenuBottone(
                     'Cosa è successo oggi',
                     '/oggi',
                     Icon(FontAwesomeIcons.calendarDay,
@@ -59,7 +72,8 @@ getBackdrop(context) {
                 widgetMenuBottone(
                     'Impostazioni',
                     '/impostazioni',
-                    Icon(FontAwesomeIcons.cog, color: Colors.white, size: 18.0),
+                    Icon(FontAwesomeIcons.cog,
+                         color: Colors.white, size: 18.0),
                     context)
               ])));
 }

@@ -31,4 +31,9 @@ class Database {
     var r = await box.get(key);
     return r;
   }
+
+  static Future resetDatabase() async {
+    await autoInit();
+    await box.clear();
+  }
 }

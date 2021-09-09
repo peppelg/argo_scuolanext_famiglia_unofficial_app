@@ -43,18 +43,17 @@ widgetNota(nota) {
 }
 
 cerchioVoto(voto, {radius = 40.0}) {
-  voto = double.parse(voto);
+  var votoAsDouble = double.tryParse(voto) ?? 10; // Per le materie dove il voto non è numerico
   return CircularPercentIndicator(
     radius: radius,
     lineWidth: 5.0,
-    percent: voto / 10,
-    center: Text(voto.toString()),
-    progressColor: coloreVoto(voto.toString()),
+    percent: votoAsDouble / 10,
+    center: Text(voto),
+    progressColor: coloreVoto(votoAsDouble),
   );
 }
 
 coloreVoto(voto) {
-  voto = double.parse(voto);
   if (voto <= 0) {
     return Colors.white;
   } else if (voto >= 6) {
@@ -117,6 +116,19 @@ widgetVoto(voto, context) {
               );
             },
           )));
+}
+
+widgetScrutinio(voto, context) {
+  return Padding(
+      padding: EdgeInsets.only(left: 5, top: 5),
+      child: ListTile(
+          leading: cerchioVoto(voto['votoOrale']['codVoto']),
+          title: Text(voto['desMateria']),
+          subtitle: ListBody(children: [
+            Text((voto['assenze'] ?? 0).toString() + ' assenze')
+          ])
+      )
+    );
 }
 
 widgetBacheca(elemento, {var refresh}) {
