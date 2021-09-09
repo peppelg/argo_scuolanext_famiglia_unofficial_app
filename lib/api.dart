@@ -461,6 +461,20 @@ Future votiscruitinio({var response}) async {
   return scrutinio;
 }
 
+Future listaProfessori({var response}) async {
+  if (response == null) {
+    response = await argoRequest(fullHeaders, 'docenticlasse',
+        {'page': '1', 'start': '0', 'limit': '25'});
+  }
+
+  if (!(response is List) && response.containsKey('error')) {
+    Fluttertoast.showToast(msg: 'Errore sconosciuto:\n\n' + response['error']);
+    return [];
+  }
+
+  return response;
+}
+
 bacheca_parse(elemento) {
   return {
     'oggetto': elemento['desOggetto'],
