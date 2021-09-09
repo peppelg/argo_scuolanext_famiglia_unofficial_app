@@ -131,6 +131,60 @@ widgetScrutinio(voto, context) {
     );
 }
 
+widgetProfessore(prof, context) {
+  
+  String nome = prof['docente']['nome'].split('(')[0].trim().toUpperCase();
+  String cognome = prof['docente']['cognome'].trim().toUpperCase();
+  String email = prof['docente']['email'].trim().toLowerCase();
+
+  var capitalize = (e) => '${e[0].toUpperCase()}${e.substring(1).toLowerCase()}';
+
+  bool isCoordinatore = prof['docente']['nome'].contains("(Coordinatore)");
+  String materie = prof['materie']
+      .substring(1, prof['materie'].length - 1) // Rimuove le tonde
+      .split(',')                               // Transforma in array
+      .map(capitalize)                          // Effettua il Capitalize delle materie
+      .join(', ');                              // Ricompone la stringa
+
+  String nomeCompleto = '$nome $cognome';
+
+  return ListTile(
+    title: Text(nomeCompleto),
+    subtitle: ListBody(children: [Text(materie)]),
+    trailing: IconButton(
+      icon: Icon(Icons.info_outline),
+      tooltip: 'Altro',
+      onPressed: () {
+        return showDialog<void>(
+            context: context,
+            barrierDismissible: true,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                  title: Text(nomeCompleto),
+                  content: SingleChildScrollView(
+                    child: ListBody(
+                      children: <Widget>[
+                        Text('Nome: ${capitalize(nome)}'),
+                        Text('Cognome: ${capitalize(cognome)}'),
+                        Text('Email: $email'),
+                        Text('Materie: $materie'),
+                        Text(isCoordinatore ? '\n(Coordinatore di classe)' : '')
+                      ],
+                    ),
+                  ),
+                  actions: <Widget>[
+                    TextButton(
+                        child: Text('Chiudi'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        })
+                  ]);
+            });
+      },
+    ),
+  );
+}
+
 widgetBacheca(elemento, {var refresh}) {
   var subtitle = <Widget>[Text(elemento['messaggio'])];
   var buttons = <Widget>[];

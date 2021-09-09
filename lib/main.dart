@@ -1,8 +1,10 @@
+import 'package:argo_famiglia/api.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:background_fetch/background_fetch.dart';
 import 'datianagrafici.dart';
+import 'professori.dart';
 import 'redirectRoute.dart';
 import 'database.dart';
 import 'login.dart';
@@ -146,6 +148,11 @@ class MyApp extends StatelessWidget {
           case '/scrutinio':
             {
               route = ScrutinioRoute();
+            }
+            break;
+          case '/professori':
+            {
+              route = ProfessoriRoute();
             }
             break;
           case '/info':
