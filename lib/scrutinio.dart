@@ -4,7 +4,6 @@ import 'package:backdrop/backdrop.dart';
 import 'dart:async';
 import 'backdropWidgets.dart';
 import 'api.dart';
-import 'database.dart';
 
 class ScrutinioRoute extends StatefulWidget {
   @override
@@ -14,26 +13,24 @@ class ScrutinioRoute extends StatefulWidget {
 }
 
 class _ScrutinioRouteState extends State<ScrutinioRoute> {
-  var voti = {};
+  var scrutinio = {};
   final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
       new GlobalKey<RefreshIndicatorState>();
 
   generaLista() {
     var tiles = <Widget>[];
-    voti.forEach((final idPeriodo, var periodoScrutinio) {
-
+    scrutinio.forEach((final idPeriodo, var periodoScrutinio) {
       var votiScrutinio = <Widget>[];
-      print("periodoScrutinio => " + periodoScrutinio.toString());
+      print('periodoScrutinio => ' + periodoScrutinio.toString());
       for (var voto in periodoScrutinio['dati']) {
         votiScrutinio.add(widgetScrutinio(voto, context));
       }
 
       tiles.add(ExpansionTile(
           title: Text(periodoScrutinio['titolo']),
-          children: votiScrutinio.isNotEmpty ? votiScrutinio : [new Text("Nessun voto")]
-        )
-      );
-
+          children: votiScrutinio.isNotEmpty
+              ? votiScrutinio
+              : [new Text('Nessun voto')]));
     });
 
     return tiles;
@@ -41,7 +38,6 @@ class _ScrutinioRouteState extends State<ScrutinioRoute> {
 
   @override
   Widget build(BuildContext context) {
-
     var lista = generaLista();
 
     return BackdropScaffold(
@@ -49,26 +45,17 @@ class _ScrutinioRouteState extends State<ScrutinioRoute> {
         backLayer: getBackdrop(context),
         frontLayer: RefreshIndicator(
             key: _refreshIndicatorKey,
-            onRefresh: aggiornaVoti,
-            child: ListView(
-              children: new List.from(<Widget>[])..addAll(lista)
-            )
-        )
-    );
+            onRefresh: aggiornaScrutinio,
+            child:
+                ListView(children: new List.from(<Widget>[])..addAll(lista))));
   }
 
-  Future aggiornaVoti() async {
+  Future aggiornaScrutinio() async {
     var nuoviVoti = await votiscruitinio();
-
-    if (nuoviVoti.isNotEmpty) {
-      await Database.put('votiscrutinio', nuoviVoti);
-    }
-    
     setState(() {
-      voti = nuoviVoti;
+      scrutinio = nuoviVoti;
     });
   }
-
 
   void initState() {
     super.initState();

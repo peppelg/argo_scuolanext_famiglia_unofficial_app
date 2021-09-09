@@ -125,7 +125,7 @@ widgetScrutinio(voto, context) {
           leading: cerchioVoto(voto['votoOrale']['codVoto']),
           title: Text(voto['desMateria']),
           subtitle: ListBody(children: [
-            Text((voto['assenze'] ?? 0).toString() + " assenze")
+            Text((voto['assenze'] ?? 0).toString() + ' assenze')
           ])
       )
     );

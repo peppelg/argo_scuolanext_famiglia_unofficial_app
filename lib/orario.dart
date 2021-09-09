@@ -133,16 +133,16 @@ class _OrarioRouteState extends State<OrarioRoute> {
               ])),
               actions: <Widget>[
                 FlatButton(
+                  child: Text('Chiudi'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                FlatButton(
                   child: Text('Salva'),
                   onPressed: () {
                     Navigator.of(context).pop();
                     modificaMateria(giorno, ora);
-                  },
-                ),
-                FlatButton(
-                  child: Text('Chiudi'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
                   },
                 ),
               ]);

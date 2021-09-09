@@ -36,7 +36,7 @@ class _DatiAnagraficiRouteState extends State<DatiAnagraficiRoute> {
       : createLines([
           {'label': 'Nome: ', 'value': dati['desNome']},
           {'label': 'Cognome: ', 'value': dati['desCognome']},
-          {'label': 'Sesso: ', 'value': dati['flgSesso'] == 'M' ? "Maschio" : "Femmina"},
+          {'label': 'Sesso: ', 'value': dati['flgSesso'] == 'M' ? 'Maschio' : 'Femmina'},
           {'label': 'Cittadinanza: ', 'value': dati['desCittadinanza']},
           {'label': 'Codice Fiscale: ', 'value': dati['desCf']},
           {'label': 'Telefono: ', 'value': dati['desTelefono']},
