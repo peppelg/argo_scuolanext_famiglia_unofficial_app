@@ -168,6 +168,7 @@ Future votigiornalieri({var response}) async {
       }
       materieVoti[voto['desMateria']]['voti'].add({
         'voto': voto['decValore'],
+		'testoVoto': voto['codVoto'],
         'data': formatDate(voto['datGiorno']),
         'tipo': voto['codVotoPratico'],
         'commento': voto['desCommento'],

@@ -42,13 +42,13 @@ widgetNota(nota) {
   ]));
 }
 
-cerchioVoto(voto, {radius = 40.0}) {
+cerchioVoto(voto, {text = null, radius = 40.0}) {
   var votoAsDouble = double.tryParse(voto) ?? 10; // Per le materie dove il voto non è numerico
   return CircularPercentIndicator(
     radius: radius,
     lineWidth: 5.0,
     percent: votoAsDouble / 10,
-    center: Text(voto),
+    center: Text(text ?? voto),
     progressColor: coloreVoto(votoAsDouble),
   );
 }
@@ -70,7 +70,7 @@ widgetVoto(voto, context) {
   return Padding(
       padding: EdgeInsets.only(left: 5, top: 5),
       child: ListTile(
-          leading: cerchioVoto(voto['voto'].toString()),
+          leading: cerchioVoto(voto['voto'].toString(), text: voto['testoVoto'].toString()),
           title: Text(voto['tipo']),
           subtitle: ListBody(
             children: [
