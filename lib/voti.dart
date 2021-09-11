@@ -6,6 +6,7 @@ import 'backdropWidgets.dart';
 import 'api.dart';
 import 'aggiornamento.dart';
 import 'database.dart';
+import 'grafico_voti.dart';
 import 'widgets.dart';
 
 class VotiRoute extends StatefulWidget {
@@ -22,10 +23,42 @@ class _VotiRouteState extends State<VotiRoute> {
 
   @override
   Widget build(BuildContext context) {
+    var sommaGlobale = {
+      'globale': {'value': .0, 'count': 0},
+      'orale': {'value': .0, 'count': 0},
+      'scritto': {'value': .0, 'count': 0},
+      'pratico': {'value': .0, 'count': 0},
+      'ScrittoOrale': {'value': .0, 'count': 0}
+    };
+
+    var mediaPerMese = {
+      'orale': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'scritto': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'pratico': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'ScrittoOrale': {
+        'value': List.filled(12, .0),
+        'count': List.filled(12, .0)
+      }
+    };
+
     checkUpdatesDialog(context);
     var widgetsMaterie = <Widget>[];
     voti.forEach((nomeMateria, materia) {
-      var media = mediaVoti(materia['voti']);
+      var out = mediaVoti(materia['voti']);
+      var media = out['risultato'];
+
+      out['medie'].forEach((key, value) {
+        sommaGlobale[key]['value'] += value['sommaVoti'];
+        sommaGlobale[key]['count'] += value['numeroVoti'];
+      });
+
+      out['mediaPerMese'].forEach((key, value) {
+        for (int i = 0; i < 12; i++) {
+          mediaPerMese[key]['value'][i] += value['value'][i];
+          mediaPerMese[key]['count'][i] += value['count'][i];
+        }
+      });
+
       var widgetsVoti = <Widget>[
         Divider(),
         Row(
@@ -58,10 +91,77 @@ class _VotiRouteState extends State<VotiRoute> {
         widgetsVoti.add(widgetVoto(voto, context));
       }
       widgetsMaterie.add(ExpansionTile(
-          leading: cerchioVoto(media['globale']),
+          leading: Padding(
+            padding: EdgeInsets.only(right: 6),
+            child: cerchioVoto(media['globale']),
+          ),
           title: Text(nomeMateria),
           children: widgetsVoti));
     });
+
+    var mediaGlobale = sommaGlobale.map((key, value) => new MapEntry(
+        key,
+        (value['count'] != 0 ? (value['value'] / value['count']) : 0)
+            .toStringAsFixed(2)));
+
+    var datiGraficoStatici = {
+      'orale': {'colore': 0xff15557c, 'label': 'Orale'},
+      'scritto': {'colore': 0xff1167b1, 'label': 'Scritto'},
+      'pratico': {'colore': 0xff187bcd, 'label': 'Pratico'},
+      'ScrittoOrale': {'colore': 0xff2a9df4, 'label': 'Totale'}
+    };
+
+    var datiGrafico = {};
+    mediaPerMese.forEach((key, value) {
+      var voti = [];
+      for (int i = 0; i < 12; i++) {
+        if (value['count'][i] != 0)
+          voti.add({
+            'value': (value['value'][i] / (value['count'][i] * 100) * 100).round() / 100,
+            'month': i
+          });
+      }
+
+      datiGrafico[key] = {
+        'voti': voti,
+        'colore': datiGraficoStatici[key]['colore'],
+        'label': datiGraficoStatici[key]['label']
+      };
+    });
+
+    var widgetsMediaGlobale = ExpansionTile(
+        leading: cerchioVoto(mediaGlobale['globale'], radius: 50.0),
+        title: Text('MEDIA GENERALE',
+            style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+        tilePadding: EdgeInsets.only(left: 12, top: 8, right: 16, bottom: 8),
+        children: <Widget>[
+          Divider(),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            Expanded(
+                child: Column(children: <Widget>[
+              cerchioVoto(mediaGlobale['orale'].toString(), radius: 60.0),
+              Opacity(opacity: 0.6, child: Text('Media orale'))
+            ])),
+            Expanded(
+                child: Column(children: <Widget>[
+              cerchioVoto(mediaGlobale['scritto'].toString(), radius: 60.0),
+              Opacity(opacity: 0.6, child: Text('Media scritto'))
+            ])),
+            Expanded(
+                child: Column(children: <Widget>[
+              cerchioVoto(mediaGlobale['pratico'].toString(), radius: 60.0),
+              Opacity(opacity: 0.6, child: Text('Media pratico'))
+            ])),
+            Expanded(
+                child: Column(children: <Widget>[
+              cerchioVoto(mediaGlobale['ScrittoOrale'].toString(),
+                  radius: 60.0),
+              Opacity(opacity: 0.6, child: Text('Media totale'))
+            ]))
+          ]),
+          Divider(),
+          ChartVoti(datiGrafico)
+        ]);
 
     return BackdropScaffold(
         title: Text('I miei voti'),
@@ -70,17 +170,16 @@ class _VotiRouteState extends State<VotiRoute> {
             key: _refreshIndicatorKey,
             onRefresh: aggiornaVoti,
             child: ListView(
-                children: new List.from(<Widget>[
-              /*
-              Text('cosita'),
-              FlatButton(
-                  child: Text('aaa'),
-                  onPressed: () {
-                    aggiornaVoti();
-                  })
-                  */
-            ])
-                  ..addAll(widgetsMaterie))));
+                children: voti.isEmpty
+                    ? <Widget>[new Text("Nessun voto.", textAlign: TextAlign.center)]
+                    : <Widget>[
+                        widgetsMediaGlobale,
+                        Divider(
+                          thickness: 3,
+                          height: 0,
+                        ),
+                        ...widgetsMaterie
+                      ])));
   }
 
   Future aggiornaVoti() async {
@@ -110,7 +209,6 @@ class _VotiRouteState extends State<VotiRoute> {
   }
 
   mediaVoti(listaVoti) {
-    //magno spaghetti
     var risultato = {};
     var medie = {
       'globale': {'numeroVoti': 0, 'sommaVoti': 0.0},
@@ -119,20 +217,43 @@ class _VotiRouteState extends State<VotiRoute> {
       'pratico': {'numeroVoti': 0, 'sommaVoti': 0.0},
       'ScrittoOrale': {'numeroVoti': 0, 'sommaVoti': 0.0}
     };
+
+    var mediePerMese = {
+      'orale': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'scritto': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'pratico': {'value': List.filled(12, .0), 'count': List.filled(12, .0)},
+      'ScrittoOrale': {
+        'value': List.filled(12, .0),
+        'count': List.filled(12, .0)
+      }
+    };
+
     for (var voto in listaVoti) {
       if (!voto['commento'].contains('non fa media') &&
           double.parse(voto['voto'].toString()) > 0) {
         double valore = 100;
         if (voto['commento'].contains('incide al')) {
           RegExp regex = new RegExp(r"(\d+)(?!.*\d)");
-          valore = double.parse(regex.allMatches(voto['commento']).first[0].replaceAll(',', '.'));
+          valore = double.parse(
+              regex.allMatches(voto['commento']).first[0].replaceAll(',', '.'));
         }
         medie['globale']['numeroVoti'] += valore;
-        medie['globale']['sommaVoti'] += double.parse(voto['voto'].toString()) * valore;
+        medie['globale']['sommaVoti'] +=
+            double.parse(voto['voto'].toString()) * valore;
         if (medie.containsKey(voto['tipo'])) {
           medie[voto['tipo']]['numeroVoti'] += valore;
           medie[voto['tipo']]['sommaVoti'] +=
               double.parse(voto['voto'].toString()) * valore;
+
+          var meseVoto = int.parse(voto['data'].split("/")[1]) - 1;
+
+          mediePerMese['ScrittoOrale']['value'][meseVoto] +=
+              double.parse(voto['voto'].toString()) * valore;
+          mediePerMese['ScrittoOrale']['count'][meseVoto]++;
+
+          mediePerMese[voto['tipo']]['value'][meseVoto] +=
+              double.parse(voto['voto'].toString()) * valore;
+          mediePerMese[voto['tipo']]['count'][meseVoto]++;
         }
       }
     }
@@ -164,7 +285,11 @@ class _VotiRouteState extends State<VotiRoute> {
       mediaVoto = '0';
     }
     risultato['ScrittoOrale'] = mediaVoto;
-    return risultato;
+    return {
+      'risultato': risultato,
+      'medie': medie,
+      'mediaPerMese': mediePerMese
+    };
   }
 
   void initState() {

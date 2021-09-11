@@ -42,6 +42,7 @@ dependencies:
   font_awesome_flutter: ^8.8.1
   install_plugin: ^2.0.1
   restart_app: ^1.0.3
+  fl_chart: ^0.40.0
 
 dev_dependencies:
   flutter_test:
