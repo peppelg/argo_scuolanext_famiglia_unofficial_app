@@ -171,7 +171,7 @@ class _VotiRouteState extends State<VotiRoute> {
             onRefresh: aggiornaVoti,
             child: ListView(
                 children: voti.isEmpty
-                    ? <Widget>[]
+                    ? <Widget>[new Text("Nessun voto.", textAlign: TextAlign.center)]
                     : <Widget>[
                         widgetsMediaGlobale,
                         Divider(
