@@ -259,7 +259,8 @@ Future compiti({var response}) async {
     }
     listaCompiti[compito['desMateria']].add({
       'data': formatDate(compito['datGiorno']),
-      'compito': compito['desCompiti']
+      'compito': compito['desCompiti'],
+	  'assegnatoPer': compito['datCompiti']
     });
   }
   return listaCompiti;

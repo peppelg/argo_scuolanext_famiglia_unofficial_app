@@ -49,7 +49,9 @@ class _CompitiRouteState extends State<CompitiRoute> {
   buildCompitiWidget(compiti) {
     var widgetCompiti = <Widget>[];
     for (var compito in compiti) {
-      widgetCompiti.add(widgetCard(compito['data'], compito['compito']));
+      // 2021-10-02 diventa 02/10/2021
+      String assegnatoPer = List.from(compito['assegnatoPer'].split('-').reversed).join('/');
+      widgetCompiti.add(widgetCard(compito['data'], compito['compito'] + ' (assegnato per $assegnatoPer)'));
     }
     return widgetCompiti;
   }
